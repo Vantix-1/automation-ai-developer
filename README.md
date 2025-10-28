@@ -1,6 +1,6 @@
 # Automation & AI Developer Roadmap 🚀
-![GitHub](https://img.shields.io/badge/GitHub-Repo-black?logo=github&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-Repo-black?style=for-the-badge&logo=github&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python&logoColor=white)
 ![Progress](https://img.shields.io/badge/Progress-Live-brightblue?style=for-the-badge&logo=github)
 
 This repository documents my journey to becoming an **Automation & AI Developer**, building intelligent systems, automation tools, and cloud-hosted SaaS applications.  
