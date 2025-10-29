@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/badge/AI_Integration-Live-purple?logo=openai&logoColor=white&style=for-the-badge" />
   <img src="https://img.shields.io/badge/AWS-Ready-orange?logo=amazonaws&logoColor=white&style=for-the-badge" />
   <img src="https://img.shields.io/badge/Progress-Week_2_Complete-success?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Learning_Path-Automation_&_AI-blueviolet?style=for-the-badge" />
 </p>
 
 ---
