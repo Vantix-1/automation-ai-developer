@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Automation & AI Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #eee; }
+    </style>
+</head>
+<body>
+    <h1>Automation & AI Dashboard</h1>
+
+    <h2>Tasks</h2>
+    <p>{{ completed_tasks }} / {{ total_tasks }} tasks completed</p>
+    <table>
+        <tr><th>Task</th><th>Completed</th></tr>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task['title'] }}</td>
+            <td>{{ task['completed'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Habits</h2>
+    <p>{{ completed_habits }} / {{ total_habits }} habits completed</p>
+    <table>
+        <tr><th>Habit</th><th>Completed</th></tr>
+        {% for habit in habits %}
+        <tr>
+            <td>{{ habit['name'] }}</td>
+            <td>{{ habit['completed'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Daily Plan</h2>
+    <table>
+        <tr><th>Time</th><th>Activity</th></tr>
+        {% for item in daily_plan %}
+        <tr>
+            <td>{{ item['time'] }}</td>
+            <td>{{ item['activity'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
