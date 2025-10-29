@@ -86,7 +86,7 @@ Focus: **Turn your Python automation scripts into simple web dashboards.**
 | Cloud + DevOps | AWS + Docker | Months 5–7 |
 | AI Integration | API + AI models | Months 8–9 |
 | SaaS Specialization | Full AI SaaS app | Months 10–12 |
-| Career Sprint | Portfolio + Certifications | Months 13–15 |
+| Career Launch | Portfolio + Certifications | Months 13–15 |
 
 ---
 
