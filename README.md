@@ -12,9 +12,7 @@
 ---
 
 ### 📈 Development Progress
-<p align="center">
-  <img src="https://progress-bar.dev/13/?title=Month%201%20of%2015%20%E2%80%94%2013%%20Complete&width=500&color=00ff99&suffix=%25" />
-</p>
+![Month 1 of 15 — 13% Complete](https://progress-bar.dev/13/?title=Month%201%20of%2015%20%E2%80%94%2013%%20Complete&width=500&color=00ff99&suffix=%25)
 
 ---
 
