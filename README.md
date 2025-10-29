@@ -60,7 +60,7 @@ Learning automation and AI programming fundamentals using **Python Crash Course,
 | 9 | `todo_cli_v2.py` | Enhanced To-Do App: priorities + deadlines | ✅ |
 | 10 | `daily_planner.py` | Daily Planner generator using dictionaries | ✅ |
 | 11 | `weekly_report.py` | Weekly report summary from logs | ✅ |
-| 12 | `productivity_tip_bot.py` | Random tip bot with file I/O | ⏳ Planned |
+| 12 | `productivity_tip_bot.py` | Random tip bot with file I/O | ✅ |
 | 13 | `habit_tracker.py` | Habit Tracker with JSON storage | ✅ |
 
 ---
