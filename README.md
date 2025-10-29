@@ -1,129 +1,156 @@
-# Automation & AI Developer Roadmap 🚀
-![GitHub](https://img.shields.io/badge/GitHub-Repo-black?style=for-the-badge&logo=github&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python&logoColor=white)
-![Progress](https://img.shields.io/badge/Progress-Live-brightblue?style=for-the-badge&logo=github)
+# 🤖 Automation & AI Developer Roadmap 🚀  
 
-This repository documents my journey to becoming an **Automation & AI Developer**, building intelligent systems, automation tools, and cloud-hosted SaaS applications.  
-The roadmap combines **Python, APIs, Databases, Cloud/DevOps, Security, and AI integrations** with hands-on projects and certifications.
-
----
-
-## About This Roadmap
-This is a live, structured 15-month roadmap focused on mastering automation and AI development.  
-I aim to create **real-world intelligent tools** that streamline tasks, integrate AI capabilities, and scale to cloud-hosted SaaS platforms.
+<p align="center">
+  <img src="https://img.shields.io/badge/GitHub-Vantix--1-black?logo=github&logoColor=white&style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white&style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Flask-Web_Framework-000000?logo=flask&logoColor=white&style=for-the-badge" />
+  <img src="https://img.shields.io/badge/AI_Integration-Live-purple?logo=openai&logoColor=white&style=for-the-badge" />
+  <img src="https://img.shields.io/badge/AWS-Ready-orange?logo=amazonaws&logoColor=white&style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Progress-Week_2_Complete-success?style=for-the-badge" />
+</p>
 
 ---
 
-## ✅ Current Phase: Python Foundations (Months 1–2)
-Learning Python fundamentals and automation scripting, including CLI tools, timers, planners, and early AI integration.
-
-**Progress Summary (Week 1–2):**
-
-#### Week 1 — Python & CLI Automation Tools
-| Script | Description | Status |
-|--------|-------------|--------|
-| `hello.py` | Python syntax & environment setup | ✅ |
-| `variables.py` | Core data types practice | ✅ |
-| `calculator.py` | CLI arithmetic automation | ✅ |
-| `motivation_message.py` | Daily motivation generator | ✅ |
-| `simple_timer.py` | Focus timer automation | ✅ |
-| `password_generator.py` | Secure password generator | ✅ |
-| `task_cleaner.py` | File/folder cleanup automation | ✅ |
-| `todo_cli.py` | CLI To-Do List (CRUD) | ✅ |
-
-#### Week 2 — Python Automation + Early AI Integration
-| Script | Description | Status |
-|--------|-------------|--------|
-| `todo_cli_v2.py` | Enhanced To-Do App (priority & deadlines) | ✅ |
-| `daily_planner.py` | Auto-generated daily planner | ✅ |
-| `weekly_report.py` | Weekly task reporting | ✅ |
-| `productivity_tip_bot.py` | AI-powered productivity tips | ✅ |
-| `habit_tracker.py` | Habit tracker with persistence | ✅ |
+### 📈 Development Progress
+<p align="center">
+  <img src="https://progress-bar.dev/13/?title=Month%201%20of%2015%20%E2%80%94%2013%%20Complete&width=500&color=00ff99&suffix=%25" />
+</p>
 
 ---
 
-## 🧩 Roadmap Overview
+Welcome to my **Automation & AI Developer Roadmap** — a hands-on journey to becoming a  
+**Full-Stack Automation Engineer + AI Integrator**, skilled in building tools that automate workflows, process data, and integrate with AI systems.
+
+This repo documents my progress through a **structured 15-month roadmap**, covering:
+- 🐍 **Python Foundations**
+- 🌐 **Flask Web Development**
+- 🧠 **AI + Automation Systems**
+- ☁️ **Cloud + DevOps**
+- ⚙️ **SaaS Product Development**
+
+---
+
+### 🎯 Mission
+To master **automation + AI systems** from the ground up — building **real tools, dashboards, and AI-driven assistants** capable of scaling into production.
+
+> 💡 From simple scripts → automation bots → web dashboards → full SaaS AI tools.
+
+---
+
+## ✅ Current Phase: Month 1–2 — Python Foundations  
+Learning automation and AI programming fundamentals using **Python Crash Course, 3rd Edition (2023)**, while building practical tools.
+
+---
+
+### ✅ Week 1 — Python Basics + CLI Utilities
+| Script | File | Description | Status |
+|--------|------|-------------|--------|
+| 1 | `hello.py` | Hello World startup script | ✅ |
+| 2 | `variables.py` | Practice with Python variables | ✅ |
+| 3 | `calculator.py` | Basic math calculator | ✅ |
+| 4 | `motivation_message.py` | Personalized productivity message | ✅ |
+| 5 | `simple_timer.py` | Focus timer using loops + time | ✅ |
+| 6 | `password_generator.py` | Secure random password generator | ✅ |
+| 7 | `task_cleaner.py` | File cleanup automation tool | ✅ |
+| 8 | `todo_cli.py` | To-Do List App (Project 1) | ✅ |
+
+---
+
+### ✅ Week 2 — Automation Logic & Data Persistence
+| Script | File | Description | Status |
+|--------|------|-------------|--------|
+| 9 | `todo_cli_v2.py` | Enhanced To-Do App: priorities + deadlines | ✅ |
+| 10 | `daily_planner.py` | Daily Planner generator using dictionaries | ✅ |
+| 11 | `weekly_report.py` | Weekly report summary from logs | ✅ |
+| 12 | `productivity_tip_bot.py` | Random tip bot with file I/O | ⏳ Planned |
+| 13 | `habit_tracker.py` | Habit Tracker with JSON storage | ✅ |
+
+---
+
+## 🚀 Week 3 — Flask + Automation Dashboards (Next Phase)
+Focus: **Turn your Python automation scripts into simple web dashboards.**
+
+| Project | File | Description | Status |
+|----------|------|-------------|--------|
+| 14 | `flask_dashboard.py` | Flask dashboard showing task stats | ⏳ Planned |
+| 15 | `task_api.py` | REST API for tasks + automation scripts | ⏳ Planned |
+| 16 | `ai_summary_bot.py` | OpenAI API script for auto-summarizing logs | ⏳ Planned |
+| 17 | `flask_login_system.py` | Basic login + authentication | ⏳ Planned |
+| 18 | `report_emailer.py` | Auto-email reports from Flask backend | ⏳ Planned |
+
+---
+
+## 🧠 Roadmap Overview
 | Phase | Focus | Duration |
 |-------|-------|----------|
-| **Python Foundations** | Core programming & automation | Months 1–2 |
-| **Databases + Web** | SQL, Flask/FastAPI, persistent apps | Months 3–4 |
-| **Cloud & DevOps** | AWS, Docker, CI/CD pipelines | Months 5–7 |
-| **Security + Agile** | Secure apps, team workflows | Months 8–9 |
-| **AI SaaS Capstone** | Intelligent automation & AI integration | Months 10–12 |
-| **Job Sprint** | Portfolio refinement & interviews | Months 13–15 |
-
----
-
-## 🎓 Certifications Target
-| Certification | Focus Area | Target Month |
-|---------------|------------|--------------|
-| AWS Developer – Associate | Cloud Deployment & DevOps | 6–7 |
-| AWS Solutions Architect – Associate | Infrastructure & CI/CD | 7 |
-| Docker Certified Associate | Containerization | 7 |
-| CompTIA Security+ (SY0-701) | Security & Compliance | 9 |
-| Certified ScrumMaster (CSM/PSM I) | Agile Workflow | 9 |
-| TensorFlow Developer | AI & Machine Learning | 12 |
-| *(Optional)* Kubernetes CKA / React | Specialization | 12+ |
+| Python Foundations | Core Programming + Automation | Months 1–2 |
+| Databases + Web | SQL + Flask/FastAPI | Months 3–4 |
+| Cloud + DevOps | AWS + Docker | Months 5–7 |
+| AI Integration | API + AI models | Months 8–9 |
+| SaaS Specialization | Full AI SaaS app | Months 10–12 |
+| Career Sprint | Portfolio + Certifications | Months 13–15 |
 
 ---
 
 ## 🛠️ Tech Stack
-- **Languages:** Python (primary), JavaScript (future)  
-- **Frameworks:** Flask, FastAPI, TensorFlow, PyTorch  
-- **Databases:** PostgreSQL, SQLite, SQLAlchemy  
-- **Cloud & DevOps:** AWS, Docker, CI/CD, GitHub Actions  
-- **AI/Automation:** OpenAI API, LangChain, Automation Scripts  
-- **Security:** JWT, OAuth2, Encryption Tools  
-- **Tools:** Git, VS Code, Linux, CLI utilities  
+- **Languages:** Python (core), JavaScript (frontend)
+- **Frameworks:** Flask • FastAPI • React (later)
+- **Database:** SQLite • PostgreSQL
+- **AI/Automation:** OpenAI API • LangChain • Selenium • Requests
+- **DevOps:** AWS • Docker • GitHub Actions
+- **Tools:** Git • VS Code • Linux Terminal
 
 ---
 
 ## 📂 Repository Layout
 
 ```
-productivity-dev-roadmap/
-├── week1/ # Python & CLI Automation Tools
-│ ├── hello.py # Python syntax & environment setup
-│ ├── variables.py # Core Python data types & variables
-│ ├── calculator.py # Basic math automation script
-│ ├── motivation_message.py # Generates daily motivational messages
-│ ├── simple_timer.py # Focus timer automation
-│ ├── password_generator.py # Secure random password generator
-│ ├── task_cleaner.py # File and folder cleanup automation
-│ └── todo_cli.py # CLI To-Do List App (basic CRUD)
+automation-ai-developer/
+├── week1/
+│ ├── hello.py
+│ ├── variables.py
+│ ├── calculator.py
+│ ├── motivation_message.py
+│ ├── simple_timer.py
+│ ├── password_generator.py
+│ ├── task_cleaner.py
+│ └── todo_cli.py
 │
-├── week2/ # Python Automation + Early AI Integration
-│ ├── todo_cli_v2.py # Enhanced To-Do App (priority & deadlines)
-│ ├── daily_planner.py # Auto-generated daily planner
-│ ├── weekly_report.py # Weekly task reporting
-│ ├── productivity_tip_bot.py # AI-powered productivity tips
-│ └── habit_tracker.py # Habit tracker with persistence
+├── week2/
+│ ├── todo_cli_v2.py
+│ ├── daily_planner.py
+│ ├── weekly_report.py
+│ ├── productivity_tip_bot.py
+│ └── habit_tracker.py
 │
-└── README.md # AI-professional roadmap, progress, and goals
+├── week3/
+│ ├── flask_dashboard.py
+│ ├── task_api.py
+│ ├── ai_summary_bot.py
+│ ├── flask_login_system.py
+│ └── report_emailer.py
+│
+└── README.md
 
 ```
 
 ---
 
-## 🚀 Key Projects
-- **CLI Automation Tools:** Timers, To-Do apps, file/task cleaners  
-- **AI Productivity Bot:** Provides tips, reminders, and task insights  
-- **SaaS Capstone (Future):** AI-powered Task Manager + Automation Dashboard  
+## 🎓 Certifications (Planned)
+- **Python PCEP/PCAP**
+- **AWS Certified Developer – Associate**
+- **Docker Certified Associate**
+- **AI Developer Certificate (OpenAI or TensorFlow)**
 
 ---
 
-## 🌟 End Goal
-By Month 15, I will be a **certified Automation & AI Developer** capable of:  
-- Building **AI-powered automation tools**  
-- Deploying **cloud-hosted SaaS applications**  
-- Integrating **AI/ML APIs** for real-world productivity solutions  
-- Securing applications with **best practices in cloud and DevOps**
+## 🌟 Goal
+Build and deploy **AI-powered automation tools** that streamline workflows and scale into **real SaaS apps**.
 
-**Target Salary Range:** 💰 $110K – $185K+ (U.S. average)
+> ⚙️ From code → automation → intelligent systems → deployed SaaS products.
 
 ---
 
-#### ✅ Author
+#### 👨‍💻 Author
 **Vance Frommer**  
 GitHub: [https://github.com/Vantix-1](https://github.com/Vantix-1)
-
