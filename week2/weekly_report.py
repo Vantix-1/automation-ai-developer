@@ -4,11 +4,19 @@ Purpose: Summarizes tasks completed during the week.
 Focus: Reporting automation for productivity & AI insights.
 """
 
-def weekly_summary(tasks_completed):
-    print("Weekly Summary:")
-    for task in tasks_completed:
-        print(f"- {task}")
+import json, os
 
-if __name__ == "__main__":
-    completed_tasks = ["CLI To-Do App", "Password Generator", "Motivation Script"]
-    weekly_summary(completed_tasks)
+DATA_FILE = os.path.join(os.path.dirname(__file__), "weekly_report.json")
+
+# Example summary from tasks and habits
+report = {
+    "tasks_completed": 5,
+    "tasks_pending": 3,
+    "habits_completed": 4,
+    "habits_pending": 2
+}
+
+with open(DATA_FILE, "w") as f:
+    json.dump(report, f, indent=4)
+
+print("Weekly report saved:", report)

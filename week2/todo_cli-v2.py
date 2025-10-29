@@ -4,17 +4,22 @@ Purpose: Adds priority levels and deadlines to tasks.
 Focus: Task automation, user input, and data handling for AI integration.
 """
 
-tasks = []
+import json, os
 
-def add_task(task, priority="Medium", deadline=None):
-    tasks.append({"task": task, "priority": priority, "deadline": deadline})
-    print(f"Task added: {task} | Priority: {priority} | Deadline: {deadline}")
+DATA_FILE = os.path.join(os.path.dirname(__file__), "todo_cli_v2.json")
 
-def view_tasks():
-    print("Tasks:")
-    for i, task in enumerate(tasks, start=1):
-        print(f"{i}. {task['task']} | Priority: {task['priority']} | Deadline: {task['deadline']}")
+def load_tasks():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as f:
+            return json.load(f)
+    return []
 
-if __name__ == "__main__":
-    add_task("Build AI roadmap", "High", "2025-11-01")
-    view_tasks()
+def save_tasks(tasks):
+    with open(DATA_FILE, "w") as f:
+        json.dump(tasks, f, indent=4)
+
+# Sample tasks
+tasks = load_tasks()
+tasks.append({"title": "Practice AI", "completed": False, "priority": "High", "deadline": "2025-11-01"})
+save_tasks(tasks)
+print("Tasks:", tasks)

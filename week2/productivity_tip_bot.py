@@ -4,16 +4,19 @@ Purpose: Provides AI-generated productivity tips to the user.
 Focus: Early AI integration for task suggestions and insights.
 """
 
-import random
+import json, os, random
+
+DATA_FILE = os.path.join(os.path.dirname(__file__), "tips.json")
 
 tips = [
-    "Batch similar tasks to save time.",
-    "Automate repetitive workflows where possible.",
-    "Use AI tools to prioritize tasks intelligently."
+    "Focus on one task at a time",
+    "Take breaks every hour",
+    "Plan tomorrow tonight",
+    "Automate repetitive tasks"
 ]
 
-def get_tip():
-    return random.choice(tips)
+tip = random.choice(tips)
+print("Tip of the day:", tip)
 
-if __name__ == "__main__":
-    print("Productivity Tip:", get_tip())
+with open(DATA_FILE, "w") as f:
+    json.dump({"tip_of_the_day": tip}, f, indent=4)

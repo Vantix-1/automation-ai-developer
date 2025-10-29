@@ -3,25 +3,23 @@ Automation & AI Dev: CLI To-Do List App
 Purpose: Manage tasks using a command-line interface (CRUD operations).
 Focus: Data structures, persistence, and automation workflow.
 """
+import json, os
 
-tasks = []
+DATA_FILE = os.path.join(os.path.dirname(__file__), "todo_cli_v2.json")
 
-def add_task(task):
-    tasks.append(task)
-    print(f"Task added: {task}")
+def load_tasks():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as f:
+            return json.load(f)
+    return []
 
-def view_tasks():
-    print("Tasks:")
-    for i, task in enumerate(tasks, start=1):
-        print(f"{i}. {task}")
+def save_tasks(tasks):
+    with open(DATA_FILE, "w") as f:
+        json.dump(tasks, f, indent=4)
 
-def remove_task(index):
-    if 0 <= index < len(tasks):
-        removed = tasks.pop(index)
-        print(f"Removed task: {removed}")
-    else:
-        print("Invalid index.")
+tasks = load_tasks()
 
-if __name__ == "__main__":
-    add_task("Build AI roadmap")
-    view_tasks()
+# Example: add a task
+tasks.append({"title": "Learn Flask", "completed": False})
+save_tasks(tasks)
+print("Tasks:", tasks)

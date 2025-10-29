@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Exercise",
+        "completed": true
+    },
+    {
+        "name": "Read",
+        "completed": false
+    },
+    {
+        "name": "Code Practice",
+        "completed": true
+    }
+]
