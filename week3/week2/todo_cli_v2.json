@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Finish report",
+        "completed": false,
+        "priority": "High",
+        "deadline": "2025-11-05"
+    },
+    {
+        "name": "Check emails",
+        "completed": false,
+        "priority": "Medium",
+        "deadline": "2025-10-30"
+    }
+]

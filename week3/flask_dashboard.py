@@ -1,63 +1,89 @@
-from flask import Flask, render_template, jsonify
-import json
-import os
+# flask_dashboard.py
+from flask import Flask, render_template, request, redirect, jsonify
+import requests
 
 app = Flask(__name__)
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "../week2/")
+TASKS_URL = "http://127.0.0.1:5000/api/tasks"
+HABITS_URL = "http://127.0.0.1:5000/api/habits"
 
-def load_json(file_name):
-    path = os.path.join(DATA_DIR, file_name)
-    if os.path.exists(path):
-        with open(path, "r") as f:
-            return json.load(f)
-    return []
 
 @app.route("/")
-def dashboard():
-    tasks = load_json("todo_cli_v2.json")
-    habits = load_json("habit_tracker.json")
-    daily_plan = load_json("daily_planner.json")
-    weekly_report = load_json("weekly_report.json")
-    tips = load_json("tips.json")
+def home():
+    try:
+        tasks = requests.get(TASKS_URL).json()
+        habits = requests.get(HABITS_URL).json()
 
-    total_tasks = len(tasks)
-    completed_tasks = sum(1 for t in tasks if t.get("completed"))
-    total_habits = len(habits)
-    completed_habits = sum(1 for h in habits if h.get("completed"))
+        total_tasks = len(tasks)
+        completed_tasks = sum(1 for t in tasks if t.get("completed"))
+        total_habits = len(habits)
+        completed_habits = sum(1 for h in habits if h.get("completed"))
 
-    return render_template(
-        "dashboard.html",
-        tasks=tasks,
-        habits=habits,
-        daily_plan=daily_plan,
-        weekly_report=weekly_report,
-        tips=tips,
-        total_tasks=total_tasks,
-        completed_tasks=completed_tasks,
-        total_habits=total_habits,
-        completed_habits=completed_habits
-    )
+        task_completion = (
+            round((completed_tasks / total_tasks) * 100, 2) if total_tasks > 0 else 0
+        )
+        habit_completion = (
+            round((completed_habits / total_habits) * 100, 2) if total_habits > 0 else 0
+        )
 
-@app.route("/api/tasks")
-def api_tasks():
-    return jsonify(load_json("todo_cli_v2.json"))
+        return render_template(
+            "dashboard.html",
+            tasks=tasks,
+            habits=habits,
+            task_completion=task_completion,
+            habit_completion=habit_completion,
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-@app.route("/api/habits")
-def api_habits():
-    return jsonify(load_json("habit_tracker.json"))
 
-@app.route("/api/daily_plan")
-def api_daily_plan():
-    return jsonify(load_json("daily_planner.json"))
+# ---------- TASK CONTROLS ----------
+@app.route("/add_task", methods=["POST"])
+def add_task():
+    name = request.form.get("task_name")
+    if name:
+        requests.post(TASKS_URL, json={"name": name})
+    return redirect("/")
 
-@app.route("/api/weekly_report")
-def api_weekly_report():
-    return jsonify(load_json("weekly_report.json"))
 
-@app.route("/api/tips")
-def api_tips():
-    return jsonify(load_json("tips.json"))
+@app.route("/complete_task/<int:index>")
+def complete_task(index):
+    tasks = requests.get(TASKS_URL).json()
+    if 0 <= index < len(tasks):
+        tasks[index]["completed"] = True
+        requests.put(f"{TASKS_URL}/{index}", json=tasks[index])
+    return redirect("/")
+
+
+@app.route("/delete_task/<int:index>")
+def delete_task(index):
+    requests.delete(f"{TASKS_URL}/{index}")
+    return redirect("/")
+
+
+# ---------- HABIT CONTROLS ----------
+@app.route("/add_habit", methods=["POST"])
+def add_habit():
+    name = request.form.get("habit_name")
+    if name:
+        requests.post(HABITS_URL, json={"name": name})
+    return redirect("/")
+
+
+@app.route("/complete_habit/<int:index>")
+def complete_habit(index):
+    habits = requests.get(HABITS_URL).json()
+    if 0 <= index < len(habits):
+        habits[index]["completed"] = True
+        requests.put(f"{HABITS_URL}/{index}", json=habits[index])
+    return redirect("/")
+
+
+@app.route("/delete_habit/<int:index>")
+def delete_habit(index):
+    requests.delete(f"{HABITS_URL}/{index}")
+    return redirect("/")
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=5001, debug=True)

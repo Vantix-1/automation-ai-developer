@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Meditate",
+        "completed": false,
+        "streak": 0,
+        "last_completed": null
+    },
+    {
+        "name": "Exercise",
+        "completed": true,
+        "streak": 0,
+        "last_completed": null
+    }
+]

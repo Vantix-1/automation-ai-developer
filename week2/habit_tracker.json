@@ -1,14 +1,9 @@
 [
-    {
-        "name": "Exercise",
-        "completed": true
-    },
-    {
-        "name": "Read",
-        "completed": false
-    },
-    {
-        "name": "Code Practice",
-        "completed": true
-    }
+{
+  "name": "Meditate",
+  "completed": false,
+  "streak": 3,
+  "last_completed": "2025-10-29"
+}
+
 ]
