@@ -132,6 +132,24 @@ automation-ai-developer/
 └── README.md
 
 ```
+---
+
+### 📈 Book & Development Progress
+**Python Crash Course, 3rd Edition (2023)** progress is tracked in [python_work](https://github.com/Vantix-1/python_work):
+
+| Chapter | File | Topic | Status |
+|---------|------|-------|--------|
+| 1 | [Chapter01](https://github.com/Vantix-1/python_work/blob/main/Chapter01) | Getting Started | ✅ Complete |
+| 2 | [Chapter02](https://github.com/Vantix-1/python_work/blob/main/Chapter02) | Variables & Data Types | ✅ Complete |
+| 3 | [Chapter03](https://github.com/Vantix-1/python_work/blob/main/Chapter03) | Lists | ✅ Complete |
+| 4 | [Chapter04](https://github.com/Vantix-1/python_work/blob/main/Chapter04) | Working with Lists | ✅ Complete |
+| 5 | [Chapter05](https://github.com/Vantix-1/python_work/blob/main/Chapter05) | if Statements | ✅ Complete |
+| 6 | [Chapter06](https://github.com/Vantix-1/python_work/blob/main/Chapter06) | Dictionaries | ✅ Complete |
+| 7 | [Chapter07](https://github.com/Vantix-1/python_work/blob/main/Chapter07) | User Input & Loops | ✅ Complete |
+| 8 | [Chapter08](https://github.com/Vantix-1/python_work/blob/main/Chapter08) | Functions | ✅ Complete |
+| 9 | [Chapter09](https://github.com/Vantix-1/python_work/blob/main/Chapter09) | Classes | ✅ Complete |
+| 10 | [Chapter10](https://github.com/Vantix-1/python_work/blob/main/Chapter10) | Files & Exceptions | ⚙️ In Progress |
+| 11 | [Chapter11](https://github.com/Vantix-1/python_work/blob/main/Chapter11) | Testing Your Code | ⏳ Planned |
 
 ---
 
