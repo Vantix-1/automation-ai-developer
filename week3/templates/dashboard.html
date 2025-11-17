@@ -1,235 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Automation & AI Dashboard</title>
+    <title>Task Dashboard</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1, h2 { color: #2c3e50; }
-        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #34495e; color: white; cursor: pointer; }
-        th:hover { background-color: #2c3e50; }
-        tr.completed td { text-decoration: line-through; color: gray; }
-        input, select, button { padding: 5px; margin: 5px 0; }
-        button { border: none; border-radius: 4px; cursor: pointer; }
-        button.complete { background-color: #27ae60; color: white; }
-        button.incomplete { background-color: #f39c12; color: white; }
-        button.delete { background-color: #c0392b; color: white; }
-        span.priority-badge { padding: 3px 6px; border-radius: 4px; color: white; font-weight: bold; }
+        body {
+            font-family: Arial;
+            background: #0d0d0d;
+            color: #00ff99;
+            padding: 20px;
+        }
+        .task {
+            margin: 10px 0;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #00ff99;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 8px;
+        }
+        button {
+            background: #00ff99;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 6px;
+        }
+        input, select {
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #00ff99;
+            background: #111;
+            color: #00ff99;
+        }
     </style>
 </head>
+
 <body>
-    <h1>Automation & AI Dashboard</h1>
 
-    <!-- TASKS -->
+    <h1>⚡ Automation Dashboard</h1>
+
+    <h2>Add Task</h2>
+    <input id="title" placeholder="Task name">
+    <select id="category">
+        <option>general</option>
+        <option>work</option>
+        <option>health</option>
+    </select>
+    <select id="priority">
+        <option>low</option>
+        <option>medium</option>
+        <option>high</option>
+    </select>
+    <button onclick="addTask()">Add</button>
+
     <h2>Tasks</h2>
-    <table>
-        <thead>
-            <tr>
-                <th onclick="sortTasks('name')">Name</th>
-                <th onclick="sortTasks('priority')">Priority</th>
-                <th onclick="sortTasks('deadline')">Deadline</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="task-list"></tbody>
-    </table>
-    <form id="task-form">
-        <input type="text" id="task-name" placeholder="Task Name" required>
-        <select id="task-priority">
-            <option value="High">High</option>
-            <option value="Medium" selected>Medium</option>
-            <option value="Low">Low</option>
-        </select>
-        <input type="date" id="task-deadline" required>
-        <button type="submit">Add Task</button>
-    </form>
+    <div id="taskList"></div>
 
-    <!-- HABITS -->
-    <h2>Habits</h2>
-    <table>
-        <thead>
-            <tr>
-                <th onclick="sortHabits('name')">Name</th>
-                <th onclick="sortHabits('streak')">Streak</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="habit-list"></tbody>
-    </table>
-    <form id="habit-form">
-        <input type="text" id="habit-name" placeholder="Habit Name" required>
-        <button type="submit">Add Habit</button>
-    </form>
+<script>
+const API_URL = "/tasks"
 
-    <script>
-        const TASK_API = "/api/tasks";
-        const HABIT_API = "/api/habits";
-        let tasksCache = [];
-        let habitsCache = [];
+async function loadTasks() {
+    const res = await fetch(API_URL)
+    const tasks = await res.json()
 
-        // --- TASKS ---
-        async function fetchAndRenderTasks() {
-            const res = await fetch(TASK_API);
-            tasksCache = await res.json();
-            renderTasks(tasksCache);
-        }
+    const container = document.getElementById("taskList")
+    container.innerHTML = ""
 
-        function renderTasks(tasks) {
-            const tbody = document.getElementById("task-list");
-            tbody.innerHTML = "";
-            const today = new Date();
+    tasks.forEach(t => {
+        container.innerHTML += `
+            <div class="task">
+                <div>
+                    <strong>${t.title}</strong><br>
+                    <small>${t.category} / ${t.priority}</small>
+                </div>
+                <div>
+                    <button onclick="toggleTask('${t.id}')">
+                        ${t.completed ? "☑" : "☐"}
+                    </button>
+                    <button onclick="deleteTask('${t.id}')">🗑</button>
+                </div>
+            </div>
+        `
+    })
+}
 
-            tasks.forEach((task, index) => {
-                const tr = document.createElement("tr");
-                tr.className = task.completed ? "completed" : "";
+async function addTask() {
+    const title = document.getElementById("title").value
+    const category = document.getElementById("category").value
+    const priority = document.getElementById("priority").value
 
-                // Priority badge
-                let color = "#3498db";
-                if (task.priority === "High") color = "#e74c3c";
-                else if (task.priority === "Medium") color = "#f1c40f";
-                else if (task.priority === "Low") color = "#2ecc71";
+    await fetch(API_URL, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ title, category, priority })
+    })
 
-                // Overdue check
-                const deadlineDate = new Date(task.deadline);
-                const overdue = !task.completed && deadlineDate < today;
+    loadTasks()
+}
 
-                tr.innerHTML = `
-                    <td>${task.name}</td>
-                    <td><span class="priority-badge" style="background-color:${color}">${task.priority}</span></td>
-                    <td style="color:${overdue ? 'red' : 'inherit'}">${task.deadline}</td>
-                    <td>
-                        <button class="${task.completed ? 'incomplete' : 'complete'}">
-                            ${task.completed ? 'Mark Incomplete' : 'Mark Complete'}
-                        </button>
-                        <button class="delete">Delete</button>
-                    </td>
-                `;
+async function toggleTask(id) {
+    await fetch(`${API_URL}/${id}/toggle`, { method: "PATCH" })
+    loadTasks()
+}
 
-                tr.querySelector("button.complete, button.incomplete").onclick = () => toggleTaskCompleted(index, !task.completed);
-                tr.querySelector(".delete").onclick = () => deleteTask(index);
+async function deleteTask(id) {
+    await fetch(`${API_URL}/${id}`, { method: "DELETE" })
+    loadTasks()
+}
 
-                tbody.appendChild(tr);
-            });
-        }
+loadTasks()
+</script>
 
-        function sortTasks(key) {
-            let sorted = [...tasksCache];
-            if (key === 'priority') {
-                const order = { High: 1, Medium: 2, Low: 3 };
-                sorted.sort((a, b) => order[a.priority] - order[b.priority]);
-            } else if (key === 'deadline') {
-                sorted.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
-            } else {
-                sorted.sort((a, b) => a.name.localeCompare(b.name));
-            }
-            renderTasks(sorted);
-        }
-
-        async function toggleTaskCompleted(index, completed) {
-            await fetch(`${TASK_API}/${index}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ completed })
-            });
-            fetchAndRenderTasks();
-        }
-
-        async function deleteTask(index) {
-            await fetch(`${TASK_API}/${index}`, { method: "DELETE" });
-            fetchAndRenderTasks();
-        }
-
-        async function addTask(name, priority, deadline) {
-            await fetch(TASK_API, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, priority, deadline })
-            });
-            fetchAndRenderTasks();
-        }
-
-        document.getElementById("task-form").addEventListener("submit", e => {
-            e.preventDefault();
-            addTask(
-                document.getElementById("task-name").value,
-                document.getElementById("task-priority").value,
-                document.getElementById("task-deadline").value
-            );
-            e.target.reset();
-        });
-
-        // --- HABITS ---
-        async function fetchAndRenderHabits() {
-            const res = await fetch(HABIT_API);
-            habitsCache = await res.json();
-            renderHabits(habitsCache);
-        }
-
-        function renderHabits(habits) {
-            const tbody = document.getElementById("habit-list");
-            tbody.innerHTML = "";
-
-            habits.forEach((habit, index) => {
-                const tr = document.createElement("tr");
-                tr.className = habit.completed ? "completed" : "";
-                tr.innerHTML = `
-                    <td>${habit.name}</td>
-                    <td>${habit.streak}</td>
-                    <td>
-                        <button class="${habit.completed ? 'incomplete' : 'complete'}">
-                            ${habit.completed ? 'Mark Incomplete' : 'Mark Complete'}
-                        </button>
-                        <button class="delete">Delete</button>
-                    </td>
-                `;
-                tr.querySelector("button.complete, button.incomplete").onclick = () => toggleHabitCompleted(index, !habit.completed);
-                tr.querySelector(".delete").onclick = () => deleteHabit(index);
-
-                tbody.appendChild(tr);
-            });
-        }
-
-        function sortHabits(key) {
-            let sorted = [...habitsCache];
-            if (key === 'streak') sorted.sort((a,b) => b.streak - a.streak);
-            else sorted.sort((a,b) => a.name.localeCompare(b.name));
-            renderHabits(sorted);
-        }
-
-        async function toggleHabitCompleted(index, completed) {
-            await fetch(`${HABIT_API}/${index}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ completed })
-            });
-            fetchAndRenderHabits();
-        }
-
-        async function deleteHabit(index) {
-            await fetch(`${HABIT_API}/${index}`, { method: "DELETE" });
-            fetchAndRenderHabits();
-        }
-
-        async function addHabit(name) {
-            await fetch(HABIT_API, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name })
-            });
-            fetchAndRenderHabits();
-        }
-
-        document.getElementById("habit-form").addEventListener("submit", e => {
-            e.preventDefault();
-            addHabit(document.getElementById("habit-name").value);
-            e.target.reset();
-        });
-
-        // --- INITIAL LOAD ---
-        fetchAndRenderTasks();
-        fetchAndRenderHabits();
-    </script>
 </body>
 </html>
