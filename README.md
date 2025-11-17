@@ -1,4 +1,4 @@
-# 🤖 AI Developer Roadmap 2024–2025 🚀
+# 🤖 AI Developer Roadmap 2025–2026 🚀
 
 <p align="center">
   <img src="https://img.shields.io/badge/GitHub-Vantix--1-black?logo=github&logoColor=white&style=for-the-badge" />
