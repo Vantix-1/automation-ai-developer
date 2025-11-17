@@ -14,7 +14,7 @@
 ## 📈 Development Progress
 ![Progress](https://progress-bar.xyz/13?title=Month_1_of_12&width=400&color=00ff99)
 
-Welcome to my **AI Developer Roadmap 2024–2025** — a modern journey to becoming a **Production-Ready AI Developer**, skilled in building, deploying, and scaling intelligent systems using cutting-edge tools and frameworks.
+Welcome to my **AI Developer Roadmap 2025–2026** — a modern journey to becoming a **Production-Ready AI Developer**, skilled in building, deploying, and scaling intelligent systems using cutting-edge tools and frameworks.
 
 This repo documents my progress through a structured **12-month learning roadmap**, covering:
 
@@ -38,7 +38,7 @@ Building core programming skills with an AI-first approach using **Python Crash 
 
 ---
 
-## ✅ Week 1 — Python Basics + AI Utilities
+## ✅ Python Basics + AI Utilities
 
 | # | File | Description | AI Focus | Status |
 |---|------|-------------|----------|--------|
@@ -53,7 +53,7 @@ Building core programming skills with an AI-first approach using **Python Crash 
 
 ---
 
-## ✅ Week 2 — Data Handling & AI Preparation
+## ✅ Data Handling & AI Preparation
 
 | # | File | Description | AI Focus | Status |
 |---|------|-------------|----------|--------|
@@ -65,7 +65,7 @@ Building core programming skills with an AI-first approach using **Python Crash 
 
 ---
 
-## 🚀 Week 3 — AI APIs & Intelligent Dashboards (Next Phase)
+## 🚀 AI APIs & Intelligent Dashboards (Next Phase)
 
 | Project | File | Description | AI Tech | Status |
 |---------|------|-------------|---------|--------|
