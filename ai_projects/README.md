@@ -35,7 +35,7 @@
 # What we're building right now:
 current_sprint = {
     "feature": "AI Chat Interface",
-    "deadline": "2024-12-20",
+    "deadline": "2025-12-20",
     "priority": "HIGH",
     "tasks": [
         "✅ WebSocket real-time communication",
