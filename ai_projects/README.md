@@ -45,4 +45,4 @@ current_sprint = {
         "🎨 UI/UX polish and animations"
     ]
 }
-
+```
