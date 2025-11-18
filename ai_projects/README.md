@@ -39,10 +39,10 @@ current_sprint = {
     "priority": "HIGH",
     "tasks": [
         "✅ WebSocket real-time communication",
-        "🔄 Message history persistence", 
-        "⏳ Streaming response handling",
-        "📝 Error handling and retry logic",
-        "🎨 UI/UX polish and animations"
+        "🔵 Message history persistence", 
+        "🏆 Streaming response handling",
+        "📄 Error handling and retry logic",
+        "👤 UI/UX polish and animations"
     ]
 }
 ```
