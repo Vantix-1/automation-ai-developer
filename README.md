@@ -1,12 +1,12 @@
-# 🤖 AI Developer Roadmap 2025–2026 🚀
+# 🤖 AI Developer Roadmap 2025–2026 🚀<div align="center">
 
 
 <p align="center"> <img src="https://img.shields.io/badge/GitHub-Vantix--1-black?logo=github&logoColor=white&style=for-the-badge" /> <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white&style=for-the-badge" /> <img src="https://img.shields.io/badge/AI_Developer-Focused-FF6B6B?logo=ai&logoColor=white&style=for-the-badge" /> <img src="https://img.shields.io/badge/Modern_Certifications-Included-4ECDC4?logo=azurepipelines&logoColor=white&style=for-the-badge" /> <img src="https://img.shields.io/badge/Status-CHAPTER_11_COMPLETED-success?style=for-the-badge" /> <img src="https://img.shields.io/badge/Current_PHASE_2_ACTIVE-blueviolet?style=for-the-badge" /> </p>
 
 ---
 ## 📈 Development Progress
-https://progress-bar.xyz/100?title=CHAPTER_11_COMPLETE&width=400&color=00ff99
-https://progress-bar.xyz/0?title=PHASE_2_STARTED&width=400&color=0066ff
+<p align="center"> <img src="https://progress-bar.xyz/100?title=CHAPTER_11_COMPLETE&width=400&color=00ff99" /> <img src="https://progress-bar.xyz/0?title=PHASE_2_STARTED&width=400&color=0066ff" /> </p>
+
 
 Welcome to my AI Developer Roadmap 2025–2026 — a modern journey to becoming a Production-Ready AI Developer, skilled in building, deploying, and scaling intelligent systems using cutting-edge tools and frameworks.
 
