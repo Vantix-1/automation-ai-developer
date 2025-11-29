@@ -7,8 +7,8 @@
   <img src="https://img.shields.io/badge/GitHub-Vantix--1-black?logo=github&logoColor=white&style=for-the-badge" />
   <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white&style=for-the-badge" />
   <img src="https://img.shields.io/badge/AI_Developer-Focused-FF6B6B?logo=ai&logoColor=white&style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Modern_Certifications-Included-4ECDC4?logo=azurepipelines&logoColor=white&style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Status-CHAPTER_11_COMPLETED-success?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Certifications-Included-4ECDC4?logo=azurepipelines&logoColor=white&style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Status-PCC_BOOK_COMPLETED-success?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Current-PHASE_2_ACTIVE-blueviolet?style=for-the-badge" />
 </p>
 
