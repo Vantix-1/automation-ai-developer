@@ -1,6 +1,7 @@
 <div align="center">
 
 # 🤖 AI Developer Roadmap 2025–2026 🚀
+</div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/GitHub-Vantix--1-black?logo=github&logoColor=white&style=for-the-badge" />
