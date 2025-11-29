@@ -169,43 +169,54 @@ ai-developer-roadmap/
     └── portfolio_projects/
 ```
 ---
+
+
 # 🎓 Modern AI Certifications (Planned)
-AWS Certified AI Practitioner
+---
+**AWS Certified AI Practitioner**
 
-Google Cloud AI Engineer
+**Google Cloud AI Engineer**
 
-Microsoft Azure AI Engineer
+**Microsoft Azure AI Engineer**
 
-OpenAI API Certification (when released)
+**OpenAI API Certification (when released)**
 
-Hugging Face NLP Certification
+**Hugging Face NLP Certification**
 
-MLOps Specialization (Coursera)
+**MLOps Specialization (Coursera)**
 
 # 🚀 AI Project Portfolio — Goals
-Intelligent Document Assistant (RAG System)
+---
+**Intelligent Document Assistant** (RAG System)
 
-AI-Powered Analytics Dashboard
+**AI-Powered Analytics Dashboard**
 
-Multi-modal AI Chat Application
+**Multi-modal AI Chat Application**
 
-Real-time Computer Vision Service
+**Real-time Computer Vision Service**
 
-Production-grade ML Pipeline (MLOps)
+**Production-grade ML Pipeline (MLOps)**
 
 # 🌟 Career Goal
-Become a Production AI Developer capable of building, deploying, and maintaining enterprise-grade AI systems that deliver measurable business value.
+---
+**Become a Production AI Developer capable of building, deploying, and maintaining enterprise-grade AI systems that deliver measurable business value.**
 
+---
 # ⚙️ From prototyping → scalable APIs → intelligent agents → full production AI.
+---
 
-# 👨‍💻 AI Developer in Training
-# Vance Frommer
+## 👨‍💻 AI Developer in Training
+# **Vance Frommer**
 GitHub: https://github.com/Vantix-1
 
-Current Focus: Building production-ready AI applications with OpenAI, LangChain, and FastAPI
-Recent Achievement: ✅ Chapter 11 Python Foundations Complete
-Next Milestone: 🚀 Phase 2 Week 1-2 — OpenAI API Mastery
+---
+**Current Focus:** Building production-ready AI applications with OpenAI, LangChain, and FastAPI
+**Recent Achievement:** ✅ Chapter 11 Python Foundations Complete
+**Next Milestone:** 🚀 Phase 2 Week 1-2 — OpenAI API Mastery
 
 <div align="center">
+
+
 ## 🎯 PHASE 1 PYTHON MASTERED • PHASE 2 ACTIVATED • AI ENGINEERING IN PROGRESS 🚀
-</div> ```
+
+</div>
