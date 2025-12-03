@@ -47,6 +47,7 @@ streamlit run streamlit_app.py
 ## ✨ New Features
 
 ### 💰 Cost Calculator
+---
 Real-time cost tracking per message
 
 Model-specific pricing
@@ -54,6 +55,7 @@ Model-specific pricing
 Session statistics
 
 Cost breakdown by model
+
 
 ### 📤 JSON Export
 ---
@@ -64,6 +66,7 @@ Metadata (tokens, costs, timestamps)
 Text version for readability
 
 Automatic export folder creation
+
 
 ### 🌐 Web Interface
 ---
@@ -76,6 +79,7 @@ Interactive configuration panel
 Download conversation as JSON
 
 Cost calculator widget
+
 
 ### 🔧 Configuration
 ---
@@ -90,7 +94,6 @@ OPENAI_API_KEY=sk-your-key-here
 
 ### Running Both Interfaces
 ---
-bash
 ```
 # Terminal chat with cost tracking
 python enhanced_openai.py
@@ -98,6 +101,7 @@ python enhanced_openai.py
 # Web interface (opens in browser)
 streamlit run streamlit_app.py
 ```
+
 
 ### 📊 Cost Management Features
 ---
@@ -112,15 +116,17 @@ Session total tracking
 
 Model comparison
 
+
 ### Export Options
 ---
-python```
+```
 # Automatic export
 connector.export_to_json()  # Creates timestamped JSON file
 
 # Manual export
 connector.export_to_json("my_conversation.json")
 ```
+
 
 ### 🎮 Enhanced Chat Commands
 ---
@@ -136,7 +142,7 @@ system <prompt> - Update system prompt
 ### 💡 Example Usage
 ---
 ### Cost-Aware Chatting
-bash
+
 ```
 $ python enhanced_openai.py
 🎯 Start interactive chat with cost tracking? (y/n): y
@@ -164,6 +170,7 @@ Export Options: Download conversation as JSON
 
 Cost Calculator: Estimate costs before chatting
 
+
 ### 🐛 Troubleshooting
 ---
 ### Common Issues:
@@ -176,7 +183,7 @@ Import errors: Reinstall dependencies with pip install -r requirements.txt
 
 ### Debug Commands
 ---
-python
+
 ```
 # Check Streamlit installation
 import streamlit as st
