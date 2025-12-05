@@ -1,0 +1,12 @@
+
+## 📋 requirements.txt
+openai>=1.6.0
+python-dotenv>=1.0.0
+tiktoken>=0.5.0
+pydantic>=2.0.0
+dataclasses-json>=0.6.0
+colorama>=0.4.6
+tqdm>=4.66.0
+streamlit>=1.28.0
+langchain>=0.1.0
+chromadb>=0.4.0
