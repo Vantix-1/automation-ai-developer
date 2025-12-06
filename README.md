@@ -1,222 +1,326 @@
 <div align="center">
 
 # 🤖 AI Developer Roadmap 2025–2026 🚀
-</div>
+
+### *From Python Foundations to Production AI Systems*
 
 <p align="center">
   <img src="https://img.shields.io/badge/GitHub-Vantix--1-black?logo=github&logoColor=white&style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white&style=for-the-badge" />
-  <img src="https://img.shields.io/badge/AI_Developer-Focused-FF6B6B?logo=ai&logoColor=white&style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Certifications-Included-4ECDC4?logo=azurepipelines&logoColor=white&style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Status-PCC_BOOK_COMPLETED-success?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Current-PHASE_2_ACTIVE-blueviolet?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white&style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Phase_1-COMPLETE-00ff99?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Phase_2-ACTIVE-0066ff?style=for-the-badge" />
 </p>
 
 ---
 
-## 📈 Development Progress
-![Chapter 11 Progress](https://progress-bar.xyz/100?title=CHAPTER_11_COMPLETE&width=400&color=00ff99)
-![Phase 2 Progress](https://progress-bar.xyz/0?title=PHASE_2_STARTED&width=400&color=0066ff)
+</div>
 
-Welcome to my **AI Developer Roadmap 2025–2026** — a modern journey to becoming a **Production-Ready AI Developer**, skilled in building, deploying, and scaling intelligent systems using cutting-edge tools and frameworks.
+## 📊 Current Progress
 
-This repo documents my progress through a structured **12-month learning roadmap**, covering:
-
-- 🐍 Python for AI/ML  
-- 🤖 Modern AI Frameworks & APIs  
-- 🚀 MLOps & Production Deployment  
-- ☁️ Cloud AI Services  
-- 📊 Real-time AI Applications  
-
----
-
-## 🎯 Mission
-To master AI development from **prototyping → production**, building deployable AI agents, RAG systems, and intelligent applications that solve real-world problems.
-
-**💡 From AI scripts → intelligent APIs → AI agents → full production AI systems.**
+```
+Phase 1: Python Foundations          ████████████████████ 100% ✅
+Phase 2: AI APIs & LLM Integration   ███░░░░░░░░░░░░░░░░░  15% 🔄
+Phase 3: Web AI & Deployment         ░░░░░░░░░░░░░░░░░░░░   0% ⏳
+Phase 4: ML Engineering              ░░░░░░░░░░░░░░░░░░░░   0% ⏳
+Phase 5: AI Specialization           ░░░░░░░░░░░░░░░░░░░░   0% ⏳
+Phase 6: Production AI Systems       ░░░░░░░░░░░░░░░░░░░░   0% ⏳
+```
 
 ---
 
-## 🎉 CHAPTER 11 COMPLETE! PCC BOOK COMPLETED! Python Foundations Mastered ✅
-### ✅ Now Entering: PHASE 2 — AI APIs & LLM Integration
+## 🎯 Mission Statement
 
-Building on the solid Python foundation from Chapter 11, we're now diving into the world of AI engineering with production-ready LLM applications.
+> **Master AI development from prototyping to production** — building deployable AI agents, RAG systems, and intelligent applications that solve real-world problems.
 
----
-
-## 🚀 CURRENT PHASE: Phase 2 — AI APIs & LLM Integration (8 Weeks)
-
-### Week 1-2: OpenAI API Mastery 🧠
-**Focus**: API Fundamentals & Prompt Engineering
-- **Days 1-2**: Environment setup & first API calls
-- **Days 3-5**: Chat completions & conversation management  
-- **Days 6-8**: Streaming responses & prompt engineering
-- **Days 9-10**: Function calling & structured outputs
-
-**Deliverables**: `ai_chat_bot.py`, `ai_content_summarizer.py`, `weather_assistant.py`
-
-### Week 3-4: LangChain Fundamentals 💻
-**Focus**: Chains, Agents & Memory
-- **Days 11-13**: LangChain architecture & first apps
-- **Days 14-16**: Sequential chains & memory
-- **Days 17-19**: Agents & tools
-- **Days 20-21**: Persistent memory systems
-
-**Deliverables**: `research_agent.py`, `conversational_bot.py`, `multi_step_assistant.py`
-
-### Week 5-6: RAG Systems & Vector DBs 🗄️
-**Focus**: Document Q&A & Embeddings
-- **Days 22-24**: Embeddings & semantic search
-- **Days 25-27**: RAG architecture & document loading
-- **Days 28-30**: First RAG system implementation
-- **Days 31-33**: Advanced RAG enhancements
-
-**Deliverables**: `rag_document_qa.py`, `multi_doc_assistant.py`, `vector_search_demo.py`
-
-### Week 7-8: Production AI APIs 🚀
-**Focus**: FastAPI & Deployment
-- **Days 34-36**: FastAPI fundamentals
-- **Days 37-39**: Chatbot REST API with streaming
-- **Days 40-42**: RAG system as API
-- **Days 43-45**: Docker containerization
-- **Days 46-48**: Monitoring & documentation
-
-**Deliverables**: `ai_chat_api.py`, `rag_api.py`, Dockerized applications
+**Journey:** AI Scripts → Intelligent APIs → AI Agents → Full Production Systems
 
 ---
 
-## ✅ Chapter 11 Complete — Python AI Foundations
+## 🎉 Milestone Achieved: Phase 1 Complete!
 
-| # | File | Description | AI Focus | Status |
-|---|------|-------------|----------|--------|
-| 1 | hello.py | Hello World startup script | Foundation | ✅ |
-| 2 | variables.py | Practice with variables | Data types for AI | ✅ |
-| 3 | calculator.py | Basic calculator | Algorithm basics | ✅ |
-| 4 | motivation_message.py | Productivity message generator | Text generation prep | ✅ |
-| 5 | simple_timer.py | Focus timer using loops | Performance timing | ✅ |
-| 6 | password_generator.py | Random password generator | Security in AI apps | ✅ |
-| 7 | task_cleaner.py | File cleanup tool | Data preprocessing | ✅ |
-| 8 | todo_cli.py | CLI To-Do List App | CLI patterns | ✅ |
-| 9 | todo_cli_v2.py | To-Do App v2 w/ priorities | Data structures | ✅ |
-|10 | daily_planner.py | Daily planner generator | JSON for APIs | ✅ |
-|11 | weekly_report.py | Weekly summary generator | Data aggregation | ✅ |
-|12 | productivity_tip_bot.py | Random tip bot | Simple AI patterns | ✅ |
-|13 | habit_tracker.py | Habit tracker with JSON | Data persistence | ✅ |
+### ✅ **Python Foundations — MASTERED**
+
+Successfully completed comprehensive Python training covering:
+- Core programming concepts & data structures
+- File I/O and JSON data handling
+- CLI application development
+- API interaction fundamentals
+- Object-oriented programming patterns
+
+**Achievement Unlocked:** Ready for production AI development with solid Python foundation
 
 ---
 
-## 🚀 Phase 2 — AI Projects & Intelligent Systems (Active)
+## 🚀 Current Focus: Phase 2 — AI APIs & LLM Integration
 
-| Project | File | Description | AI Tech | Status |
-|---------|------|-------------|---------|--------|
-| AI Chat Bot | ai_chat_bot.py | Chat using OpenAI API | OpenAI API | 🔄 In Progress |
-| RAG Q&A | rag_document_qa.py | RAG document Q&A | LangChain + OpenAI | ⏳ Week 5-6 |
-| AI Dashboard | flask_ai_dashboard.py | Flask dashboard + AI | Flask + Plotly | ⏳ Week 7-8 |
-| Summarizer | ai_content_summarizer.py | Auto content summarization | NLP APIs | 🔄 In Progress |
-| Weather Assistant | weather_assistant.py | Function calling demo | OpenAI Tools | 🔄 In Progress |
-| Research Agent | research_agent.py | Web research agent | LangChain Agents | ⏳ Week 3-4 |
-| Production API | ai_chat_api.py | FastAPI chatbot | FastAPI + Docker | ⏳ Week 7-8 |
+**Duration:** 8 Weeks | **Status:** Week 1 In Progress
+
+<details>
+<summary><b>📅 Week 1-2: OpenAI API Mastery</b> 🔄 IN PROGRESS</summary>
+
+**Learning Objectives:**
+- API authentication and environment setup
+- Chat completions and conversation management
+- Streaming responses and real-time interactions
+- Advanced prompt engineering techniques
+- Function calling and structured outputs
+
+**Project Deliverables:**
+- `ai_chat_bot.py` — Interactive AI assistant
+- `ai_content_summarizer.py` — Intelligent text summarization
+- `weather_assistant.py` — Function calling demonstration
+
+</details>
+
+<details>
+<summary><b>📅 Week 3-4: LangChain Fundamentals</b> ⏳ UPCOMING</summary>
+
+**Learning Objectives:**
+- LangChain architecture and core concepts
+- Building sequential chains
+- Implementing memory systems
+- Creating autonomous agents
+- Tool integration and custom tools
+
+**Project Deliverables:**
+- `research_agent.py` — Web research automation
+- `conversational_bot.py` — Stateful conversations
+- `multi_step_assistant.py` — Complex task orchestration
+
+</details>
+
+<details>
+<summary><b>📅 Week 5-6: RAG Systems & Vector Databases</b> ⏳ UPCOMING</summary>
+
+**Learning Objectives:**
+- Understanding embeddings and semantic search
+- RAG system architecture and design patterns
+- Document loading and preprocessing
+- Vector database integration (Pinecone/Chroma)
+- Advanced retrieval strategies
+
+**Project Deliverables:**
+- `rag_document_qa.py` — Document Q&A system
+- `multi_doc_assistant.py` — Multi-document intelligence
+- `vector_search_demo.py` — Semantic search showcase
+
+</details>
+
+<details>
+<summary><b>📅 Week 7-8: Production AI APIs</b> ⏳ UPCOMING</summary>
+
+**Learning Objectives:**
+- FastAPI framework mastery
+- RESTful API design for AI services
+- Streaming response implementation
+- Docker containerization
+- API monitoring and documentation
+
+**Project Deliverables:**
+- `ai_chat_api.py` — Production chat API
+- `rag_api.py` — Scalable RAG service
+- Fully Dockerized and documented applications
+
+</details>
 
 ---
 
-# 🧠 Modern AI Roadmap Overview
+## ✅ Phase 1: Python Foundations — Project Portfolio
 
-| Phase | Focus | Duration | Key Technologies | Status |
-|-------|--------|-----------|------------------|--------|
-| **Phase 1** | Python Foundations | Months 1–2 | Python, Data Structures | ✅ **COMPLETE** |
-| **Phase 2** | AI APIs & LLM Integration | Months 3–4 | OpenAI, LangChain, RAG | 🔄 **ACTIVE** |
-| Phase 3 | Web AI & Deployment | Months 5–6 | FastAPI, Docker, AWS | ⏳ Planned |
-| Phase 4 | ML Engineering | Months 7–8 | Sklearn, MLflow | ⏳ Planned |
-| Phase 5 | AI Specialization | Months 9–10 | OpenCV, Transformers | ⏳ Planned |
-| Phase 6 | Production AI Systems | Months 11–12 | Microservices, Monitoring | ⏳ Planned |
+### 🎓 Completed Projects (13/13)
 
----
-
-# 🛠️ Modern AI Tech Stack
-
-**Languages:** Python • JavaScript  
-**AI Frameworks:** LangChain • LlamaIndex • OpenAI SDK • Hugging Face  
-**Web:** FastAPI • Streamlit • Flask  
-**Data/ML:** Pandas • NumPy • Scikit-learn • PyTorch  
-**Deployment:** Docker • AWS SageMaker • Azure AI • GCP Vertex AI  
-**Monitoring:** MLflow • Weights & Biases • Prometheus  
+| # | Project | Description | AI Relevance | Status |
+|---|---------|-------------|--------------|--------|
+| 01 | `hello.py` | Hello World & environment setup | Development foundation | ✅ |
+| 02 | `variables.py` | Variable practice & data types | AI data type mastery | ✅ |
+| 03 | `calculator.py` | Basic calculator implementation | Algorithm fundamentals | ✅ |
+| 04 | `motivation_message.py` | Message generator | Text generation patterns | ✅ |
+| 05 | `simple_timer.py` | Focus timer with loops | Performance measurement | ✅ |
+| 06 | `password_generator.py` | Secure password creation | Security for AI apps | ✅ |
+| 07 | `task_cleaner.py` | File cleanup automation | Data preprocessing | ✅ |
+| 08 | `todo_cli.py` | CLI To-Do application | Command-line interfaces | ✅ |
+| 09 | `todo_cli_v2.py` | Enhanced To-Do with priorities | Advanced data structures | ✅ |
+| 10 | `daily_planner.py` | Daily planning tool | JSON handling for APIs | ✅ |
+| 11 | `weekly_report.py` | Report generation system | Data aggregation | ✅ |
+| 12 | `productivity_tip_bot.py` | Random tip generator | Simple AI patterns | ✅ |
+| 13 | `habit_tracker.py` | Habit tracking with persistence | Data storage patterns | ✅ |
 
 ---
 
-# 📂 Repository Layout (AI-Focused)
+## 🚀 Phase 2: AI Projects — In Development
 
-```text
+| Project | File | Technology Stack | Status | Week |
+|---------|------|-----------------|--------|------|
+| **AI Chat Bot** | `ai_chat_bot.py` | OpenAI API | 🔄 Active | 1-2 |
+| **Content Summarizer** | `ai_content_summarizer.py` | OpenAI API, NLP | 🔄 Active | 1-2 |
+| **Weather Assistant** | `weather_assistant.py` | OpenAI Tools | 🔄 Active | 1-2 |
+| **Research Agent** | `research_agent.py` | LangChain, Search APIs | ⏳ Planned | 3-4 |
+| **Conversational Bot** | `conversational_bot.py` | LangChain, Memory | ⏳ Planned | 3-4 |
+| **RAG Document Q&A** | `rag_document_qa.py` | LangChain, Vector DB | ⏳ Planned | 5-6 |
+| **Multi-Doc Assistant** | `multi_doc_assistant.py` | RAG, Embeddings | ⏳ Planned | 5-6 |
+| **Production Chat API** | `ai_chat_api.py` | FastAPI, Docker | ⏳ Planned | 7-8 |
+| **RAG API Service** | `rag_api.py` | FastAPI, Docker | ⏳ Planned | 7-8 |
+
+---
+
+## 🗺️ Complete Roadmap: 6 Phases, 12 Months
+
+| Phase | Focus Area | Duration | Key Technologies | Status |
+|-------|-----------|----------|------------------|--------|
+| **1** | **Python Foundations** | Months 1-2 | Python, Data Structures, OOP | ✅ **COMPLETE** |
+| **2** | **AI APIs & LLM Integration** | Months 3-4 | OpenAI, LangChain, RAG | 🔄 **ACTIVE** |
+| **3** | **Web AI & Deployment** | Months 5-6 | FastAPI, Docker, Cloud | ⏳ Planned |
+| **4** | **ML Engineering** | Months 7-8 | Scikit-learn, MLflow, Pipelines | ⏳ Planned |
+| **5** | **AI Specialization** | Months 9-10 | Computer Vision, NLP, Audio | ⏳ Planned |
+| **6** | **Production AI Systems** | Months 11-12 | MLOps, Microservices, Monitoring | ⏳ Planned |
+
+---
+
+## 🛠️ Modern AI Technology Stack
+
+### **Core Languages**
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+### **AI/ML Frameworks**
+![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-121212?style=flat)
+![Hugging Face](https://img.shields.io/badge/HuggingFace-FFD21E?style=flat&logo=huggingface&logoColor=black)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat&logo=pytorch&logoColor=white)
+
+### **Web Frameworks**
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white)
+
+### **Data & ML Tools**
+![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat&logo=numpy&logoColor=white)
+![Scikit-learn](https://img.shields.io/badge/ScikitLearn-F7931E?style=flat&logo=scikitlearn&logoColor=white)
+
+### **Cloud & Deployment**
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=flat&logo=amazonaws&logoColor=white)
+![Azure](https://img.shields.io/badge/Azure-0078D4?style=flat&logo=microsoftazure&logoColor=white)
+![GCP](https://img.shields.io/badge/GCP-4285F4?style=flat&logo=googlecloud&logoColor=white)
+
+### **MLOps & Monitoring**
+![MLflow](https://img.shields.io/badge/MLflow-0194E2?style=flat&logo=mlflow&logoColor=white)
+![Weights & Biases](https://img.shields.io/badge/W&B-FFBE00?style=flat&logo=weightsandbiases&logoColor=black)
+![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=flat&logo=prometheus&logoColor=white)
+
+---
+
+## 📂 Repository Structure
+
+```
 ai-developer-roadmap/
-├── chapter_11_complete/
+│
+├── 📁 phase_1_complete/           ✅ Python Foundations
 │   ├── python_basics/
 │   ├── data_handling/
+│   ├── cli_applications/
 │   └── api_fundamentals/
 │
-├── phase_2_active/
-│   ├── openai_api/
-│   ├── langchain_fundamentals/
-│   ├── rag_systems/
-│   └── production_apis/
+├── 📁 phase_2_active/             🔄 AI APIs & LLM Integration
+│   ├── week_1_2_openai/
+│   │   ├── ai_chat_bot.py
+│   │   ├── ai_content_summarizer.py
+│   │   └── weather_assistant.py
+│   ├── week_3_4_langchain/
+│   ├── week_5_6_rag_systems/
+│   └── week_7_8_production_apis/
 │
-├── upcoming_phases/
-│   ├── web_ai_deployment/
-│   ├── ml_engineering/
-│   └── ai_specialization/
+├── 📁 upcoming_phases/            ⏳ Future Development
+│   ├── phase_3_web_deployment/
+│   ├── phase_4_ml_engineering/
+│   ├── phase_5_specialization/
+│   └── phase_6_production_systems/
 │
-└── production/
-    ├── mlops_pipelines/
-    ├── monitoring/
-    └── portfolio_projects/
+└── 📁 portfolio_projects/         🎯 Showcase Work
+    ├── intelligent_document_assistant/
+    ├── ai_analytics_dashboard/
+    └── mlops_pipeline/
 ```
----
-
-
-# 🎓 Modern AI Certifications (Planned)
----
-**AWS Certified AI Practitioner**
-
-**Google Cloud AI Engineer**
-
-**Microsoft Azure AI Engineer**
-
-**OpenAI API Certification (when released)**
-
-**Hugging Face NLP Certification**
-
-**MLOps Specialization (Coursera)**
-
-# 🚀 AI Project Portfolio — Goals
----
-**Intelligent Document Assistant** (RAG System)
-
-**AI-Powered Analytics Dashboard**
-
-**Multi-modal AI Chat Application**
-
-**Real-time Computer Vision Service**
-
-**Production-grade ML Pipeline (MLOps)**
-
-# 🌟 Career Goal
----
-**Become a Production AI Developer capable of building, deploying, and maintaining enterprise-grade AI systems that deliver measurable business value.**
 
 ---
-# ⚙️ From prototyping → scalable APIs → intelligent agents → full production AI.
+
+## 🎓 Planned Certifications & Learning
+
+### **Cloud AI Certifications**
+- 🎯 AWS Certified AI Practitioner
+- 🎯 Google Cloud Professional ML Engineer
+- 🎯 Microsoft Azure AI Engineer Associate
+
+### **Specialized Training**
+- 🎯 OpenAI API Certification (when available)
+- 🎯 Hugging Face NLP Course
+- 🎯 MLOps Specialization (Coursera)
+- 🎯 LangChain & LlamaIndex Advanced Courses
+
 ---
 
-## 👨‍💻 AI Developer in Training
-# **Vance Frommer**
-GitHub: https://github.com/Vantix-1
+## 🌟 Portfolio Project Goals
+
+### **Phase 2-3 Projects**
+1. **Intelligent Document Assistant** — Enterprise RAG system with multi-document support
+2. **AI-Powered Analytics Dashboard** — Real-time insights with ML predictions
+3. **Multi-modal AI Chat Application** — Text, image, and voice interactions
+
+### **Phase 4-6 Projects**
+4. **Real-time Computer Vision Service** — Object detection and tracking API
+5. **Production ML Pipeline** — End-to-end MLOps with monitoring and retraining
+6. **AI Microservices Platform** — Scalable, containerized AI services
 
 ---
-**Current Focus:** Building production-ready AI applications with OpenAI, LangChain, and FastAPI
-**Recent Achievement:** ✅ Chapter 11 Python Foundations Complete
-**Next Milestone:** 🚀 Phase 2 Week 1-2 — OpenAI API Mastery
+
+## 💼 Career Objective
+
+> **Become a Production AI Developer** capable of building, deploying, and maintaining enterprise-grade AI systems that deliver measurable business value in real-world applications.
+
+**Focus Areas:**
+- ✅ Strong software engineering fundamentals
+- 🔄 Modern AI/ML frameworks and APIs
+- ⏳ Cloud-native architecture and deployment
+- ⏳ MLOps and production monitoring
+- ⏳ System design for AI at scale
+
+---
+
+## 📈 Learning Philosophy
+
+**Build → Deploy → Iterate → Scale**
+
+Every project follows a production-ready development cycle:
+1. **Prototype** — Quick validation of concepts
+2. **Refine** — Code quality, testing, documentation
+3. **Containerize** — Docker deployment packages
+4. **Monitor** — Logging, metrics, error tracking
+5. **Optimize** — Performance and cost efficiency
+
+---
+
+## 👨‍💻 About
+
+**Vance Frommer** — AI Developer in Training
+
+🔗 **GitHub:** [Vantix-1](https://github.com/Vantix-1)
+
+📍 **Current Focus:** Building production-ready AI applications with OpenAI, LangChain, and FastAPI
+
+🎯 **Recent Achievement:** Phase 1 Python Foundations — Complete ✅
+
+🚀 **Next Milestone:** Phase 2 Week 3-4 — LangChain Fundamentals
+
+---
 
 <div align="center">
 
+### 🎯 PHASE 1 MASTERED • PHASE 2 IN PROGRESS • PRODUCTION AI ENGINEERING AHEAD 🚀
 
-## 🎯 PHASE 1 PYTHON MASTERED • PHASE 2 ACTIVATED • AI ENGINEERING IN PROGRESS 🚀
+**Last Updated:** December 2025
+
+[![GitHub followers](https://img.shields.io/github/followers/Vantix-1?style=social)](https://github.com/Vantix-1)
+[![GitHub stars](https://img.shields.io/github/stars/Vantix-1?style=social)](https://github.com/Vantix-1)
 
 </div>
