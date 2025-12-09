@@ -7,10 +7,10 @@ import os
 from typing import List, Dict, Any, Optional
 from colorama import Fore, Style, init
 from langchain_openai import ChatOpenAI
-from langchain.prompts import PromptTemplate, ChatPromptTemplate
-from langchain.chains import LLMChain, SequentialChain, TransformChain
-from langchain.schema import StrOutputParser
-from langchain.callbacks import get_openai_callback
+from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough, RunnableLambda, RunnableParallel
+from langchain_community.callbacks import get_openai_callback
 
 from dotenv import load_dotenv
 
@@ -37,9 +37,9 @@ class SimpleChainBuilder:
         print(Fore.YELLOW + f"🤖 Model: {model}, Temperature: {temperature}")
     
     def create_basic_chain(self):
-        """Create and test a basic LLMChain"""
+        """Create and test a basic LCEL chain"""
         print(Fore.CYAN + "\n" + "="*50)
-        print(Fore.CYAN + "🔗 Basic LLMChain")
+        print(Fore.CYAN + "🔗 Basic LCEL Chain")
         print(Fore.CYAN + "="*50)
         
         # Create prompt template
@@ -56,13 +56,8 @@ class SimpleChainBuilder:
             template=template
         )
         
-        # Create chain
-        chain = LLMChain(
-            llm=self.llm,
-            prompt=prompt,
-            output_key="answer",  # Custom output key
-            verbose=False
-        )
+        # Create chain using LCEL
+        chain = prompt | self.llm | StrOutputParser()
         
         # Test the chain
         inputs = {
@@ -77,7 +72,7 @@ class SimpleChainBuilder:
             print(Fore.GREEN + "\n✅ Chain executed successfully!")
             print(Fore.WHITE + f"\n📥 Inputs: {inputs}")
             print(Fore.WHITE + f"\n📤 Output:")
-            print(Fore.WHITE + result["answer"])
+            print(Fore.WHITE + result)
             print(Fore.CYAN + f"\n📊 Cost: ${cb.total_cost:.6f}")
         
         return chain
@@ -94,13 +89,13 @@ class SimpleChainBuilder:
             text = inputs["text"]
             # Simple cleaning
             cleaned = text.strip().replace('\n', ' ').replace('  ', ' ')
-            return {"cleaned_text": cleaned}
+            return {"cleaned_text": cleaned, "text": text}
         
         def count_words(inputs: Dict) -> Dict:
             """Count words in text"""
             text = inputs["cleaned_text"]
             word_count = len(text.split())
-            return {"word_count": word_count, "text": text}
+            return {"word_count": word_count, "cleaned_text": text, "text": inputs["text"]}
         
         def analyze_complexity(inputs: Dict) -> Dict:
             """Analyze text complexity based on word count"""
@@ -113,33 +108,17 @@ class SimpleChainBuilder:
             else:
                 complexity = "Complex"
             
-            return {"complexity": complexity, "original_text": inputs["text"]}
+            return {
+                "complexity": complexity, 
+                "word_count": count,
+                "original_text": inputs["text"]
+            }
         
-        # Create transformation chains
-        clean_chain = TransformChain(
-            input_variables=["text"],
-            output_variables=["cleaned_text"],
-            transform=clean_text
-        )
-        
-        count_chain = TransformChain(
-            input_variables=["cleaned_text"],
-            output_variables=["word_count", "text"],
-            transform=count_words
-        )
-        
-        analyze_chain = TransformChain(
-            input_variables=["word_count", "text"],
-            output_variables=["complexity", "original_text"],
-            transform=analyze_complexity
-        )
-        
-        # Create sequential chain
-        sequential_chain = SequentialChain(
-            chains=[clean_chain, count_chain, analyze_chain],
-            input_variables=["text"],
-            output_variables=["complexity", "original_text"],
-            verbose=True
+        # Create transformation chain using LCEL
+        chain = (
+            RunnableLambda(clean_text) 
+            | RunnableLambda(count_words) 
+            | RunnableLambda(analyze_complexity)
         )
         
         # Test the chain
@@ -154,7 +133,7 @@ class SimpleChainBuilder:
         """
         
         print(Fore.YELLOW + "\n📝 Testing with sample text...")
-        result = sequential_chain({"text": test_text})
+        result = chain.invoke({"text": test_text})
         
         print(Fore.GREEN + "\n✅ Transformation Complete!")
         print(Fore.CYAN + f"\n📊 Results:")
@@ -162,7 +141,7 @@ class SimpleChainBuilder:
         print(Fore.WHITE + f"Word count: {result.get('word_count', 'N/A')}")
         print(Fore.WHITE + f"Complexity: {result['complexity']}")
         
-        return sequential_chain
+        return chain
     
     def create_conditional_chain(self):
         """Create a chain with conditional logic"""
@@ -178,14 +157,10 @@ class SimpleChainBuilder:
             
             Query: {query}
             
-            Category:"""
+            Category (one word only):"""
         )
         
-        classify_chain = LLMChain(
-            llm=self.llm,
-            prompt=classify_prompt,
-            output_key="category"
-        )
+        classify_chain = classify_prompt | self.llm | StrOutputParser()
         
         # Chain 2: Generate appropriate response based on category
         response_prompt = PromptTemplate(
@@ -197,18 +172,19 @@ class SimpleChainBuilder:
             Response:"""
         )
         
-        response_chain = LLMChain(
-            llm=self.llm,
-            prompt=response_prompt,
-            output_key="response"
-        )
+        # Create sequential chain using LCEL
+        def add_category(inputs):
+            """Helper to pass through query and add category"""
+            query = inputs["query"]
+            category = inputs["category"]
+            return {"query": query, "category": category}
         
-        # Create sequential chain
-        conditional_chain = SequentialChain(
-            chains=[classify_chain, response_chain],
-            input_variables=["query"],
-            output_variables=["category", "response"],
-            verbose=True
+        sequential_chain = (
+            {"query": RunnablePassthrough(), "category": classify_chain}
+            | RunnableLambda(add_category)
+            | response_prompt
+            | self.llm
+            | StrOutputParser()
         )
         
         # Test with different queries
@@ -227,16 +203,20 @@ class SimpleChainBuilder:
             print(Fore.CYAN + f"\n📝 Query {i}: {query}")
             
             with get_openai_callback() as cb:
-                result = conditional_chain({"query": query})
+                # First get category
+                category = classify_chain.invoke({"query": query})
+                # Then get response
+                response = sequential_chain.invoke({"query": query})
+                
                 total_cost += cb.total_cost
                 
-                print(Fore.WHITE + f"Category: {result['category']}")
-                print(Fore.WHITE + f"Response: {result['response'][:100]}...")
+                print(Fore.WHITE + f"Category: {category.strip()}")
+                print(Fore.WHITE + f"Response: {response[:100]}...")
                 print(Fore.YELLOW + f"Cost: ${cb.total_cost:.6f}")
         
         print(Fore.CYAN + f"\n💰 Total cost for all queries: ${total_cost:.6f}")
         
-        return conditional_chain
+        return sequential_chain
     
     def create_chat_prompt_chain(self):
         """Create chain with chat prompt templates"""
@@ -252,12 +232,8 @@ class SimpleChainBuilder:
             ("human", "{question}")
         ])
         
-        # Create chain
-        chain = LLMChain(
-            llm=self.llm,
-            prompt=chat_prompt,
-            output_key="answer"
-        )
+        # Create chain using LCEL
+        chain = chat_prompt | self.llm | StrOutputParser()
         
         # Test the chain
         test_cases = [
@@ -282,7 +258,7 @@ class SimpleChainBuilder:
                 result = chain.invoke(test_case)
                 
                 print(Fore.WHITE + f"\nQuestion: {test_case['question']}")
-                print(Fore.WHITE + f"\nAnswer: {result['answer'][:150]}...")
+                print(Fore.WHITE + f"\nAnswer: {result[:150]}...")
                 print(Fore.YELLOW + f"Cost: ${cb.total_cost:.6f}")
         
         return chain
@@ -294,28 +270,34 @@ class SimpleChainBuilder:
         print(Fore.CYAN + "="*50)
         
         # Define different chains for different purposes
-        chains = {}
         
         # Chain 1: Summarizer
         summarize_prompt = PromptTemplate(
             input_variables=["text"],
             template="Summarize this text in 2-3 sentences:\n\n{text}\n\nSummary:"
         )
-        chains["summary"] = LLMChain(llm=self.llm, prompt=summarize_prompt, output_key="summary")
+        summary_chain = summarize_prompt | self.llm | StrOutputParser()
         
         # Chain 2: Sentiment analyzer
         sentiment_prompt = PromptTemplate(
             input_variables=["text"],
             template="Analyze the sentiment of this text (positive, negative, neutral):\n\n{text}\n\nSentiment:"
         )
-        chains["sentiment"] = LLMChain(llm=self.llm, prompt=sentiment_prompt, output_key="sentiment")
+        sentiment_chain = sentiment_prompt | self.llm | StrOutputParser()
         
         # Chain 3: Key points extractor
         keypoints_prompt = PromptTemplate(
             input_variables=["text"],
             template="Extract 3-5 key points from this text:\n\n{text}\n\nKey points:"
         )
-        chains["keypoints"] = LLMChain(llm=self.llm, prompt=keypoints_prompt, output_key="keypoints")
+        keypoints_chain = keypoints_prompt | self.llm | StrOutputParser()
+        
+        # Create parallel chain using RunnableParallel
+        parallel_chain = RunnableParallel(
+            summary=summary_chain,
+            sentiment=sentiment_chain,
+            keypoints=keypoints_chain
+        )
         
         # Test text
         test_text = """
@@ -329,20 +311,10 @@ class SimpleChainBuilder:
         print(Fore.YELLOW + f"\n📝 Processing text: '{test_text[:80]}...'")
         print(Fore.YELLOW + "\n🔗 Running parallel chains...")
         
-        results = {}
-        total_cost = 0
-        
-        # Run chains in sequence (for demonstration)
-        for name, chain in chains.items():
-            print(Fore.CYAN + f"\n🔄 Running {name} chain...")
-            
-            with get_openai_callback() as cb:
-                result = chain.run(text=test_text)
-                results[name] = result
-                total_cost += cb.total_cost
-                
-                print(Fore.WHITE + f"Result: {result[:100]}...")
-                print(Fore.YELLOW + f"Cost: ${cb.total_cost:.6f}")
+        # Run chains in parallel
+        with get_openai_callback() as cb:
+            results = parallel_chain.invoke({"text": test_text})
+            total_cost = cb.total_cost
         
         # Display all results
         print(Fore.CYAN + "\n" + "="*50)
@@ -355,7 +327,7 @@ class SimpleChainBuilder:
         
         print(Fore.CYAN + f"\n💰 Total parallel processing cost: ${total_cost:.6f}")
         
-        return chains
+        return parallel_chain
     
     def chain_comparison(self):
         """Compare different chain configurations"""
@@ -415,10 +387,10 @@ class SimpleChainBuilder:
                 api_key=os.getenv('OPENAI_API_KEY')
             )
             
-            chain = LLMChain(llm=llm, prompt=prompt)
+            chain = prompt | llm | StrOutputParser()
             
             with get_openai_callback() as cb:
-                result = chain.run(topic="machine learning")
+                result = chain.invoke({"topic": "machine learning"})
                 
                 comparison_results.append({
                     "name": config['name'],
@@ -449,7 +421,7 @@ class SimpleChainBuilder:
                 result["temperature"],
                 result["tokens"],
                 result["cost"],
-                result["result_preview"]
+                result["result_preview"][:30] + "..."
             ))
     
     def interactive_chain_builder(self):
@@ -461,7 +433,7 @@ class SimpleChainBuilder:
         while True:
             print(Fore.YELLOW + "\n" + "━" * 50)
             print(Fore.YELLOW + "🔗 Available Chain Types:")
-            print(Fore.YELLOW + "1. Basic LLMChain")
+            print(Fore.YELLOW + "1. Basic LCEL Chain")
             print(Fore.YELLOW + "2. Transformation Chain")
             print(Fore.YELLOW + "3. Conditional Chain")
             print(Fore.YELLOW + "4. Chat Prompt Chain")
@@ -476,20 +448,25 @@ class SimpleChainBuilder:
                 print(Fore.YELLOW + "\n👋 Goodbye!")
                 break
             
-            if choice == "1":
-                self.create_basic_chain()
-            elif choice == "2":
-                self.create_transformation_chain()
-            elif choice == "3":
-                self.create_conditional_chain()
-            elif choice == "4":
-                self.create_chat_prompt_chain()
-            elif choice == "5":
-                self.create_parallel_chains()
-            elif choice == "6":
-                self.chain_comparison()
-            else:
-                print(Fore.RED + "❌ Invalid choice")
+            try:
+                if choice == "1":
+                    self.create_basic_chain()
+                elif choice == "2":
+                    self.create_transformation_chain()
+                elif choice == "3":
+                    self.create_conditional_chain()
+                elif choice == "4":
+                    self.create_chat_prompt_chain()
+                elif choice == "5":
+                    self.create_parallel_chains()
+                elif choice == "6":
+                    self.chain_comparison()
+                else:
+                    print(Fore.RED + "❌ Invalid choice")
+            except Exception as e:
+                print(Fore.RED + f"❌ Error: {e}")
+                import traceback
+                traceback.print_exc()
             
             input(Fore.YELLOW + "\nPress Enter to continue...")
 
@@ -501,6 +478,8 @@ def main():
         
     except Exception as e:
         print(Fore.RED + f"\n❌ Error: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()

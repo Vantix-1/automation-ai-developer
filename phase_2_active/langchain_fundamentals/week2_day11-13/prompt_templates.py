@@ -7,8 +7,8 @@ import os
 import json
 from typing import Dict, List, Any, Optional
 from colorama import Fore, Style, init
-from langchain_openai import ChatOpenAI
-from langchain.prompts import (
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_core.prompts import (
     PromptTemplate, 
     ChatPromptTemplate,
     SystemMessagePromptTemplate,
@@ -18,14 +18,12 @@ from langchain.prompts import (
     FewShotPromptTemplate,
     FewShotChatMessagePromptTemplate
 )
-from langchain.prompts.example_selector import (
+from langchain_core.example_selectors import (
     LengthBasedExampleSelector,
     SemanticSimilarityExampleSelector
 )
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
-from langchain.schema import BaseOutputParser
-from langchain.callbacks import get_openai_callback
+from langchain_core.output_parsers import BaseOutputParser, StrOutputParser
+from langchain_community.callbacks import get_openai_callback
 
 from dotenv import load_dotenv
 
@@ -117,16 +115,16 @@ class AdvancedPromptTemplates:
         )
         print(Fore.WHITE + f"\nFormatted:\n{formatted2}")
         
-        # Example 3: Using the template with LLM
+        # Example 3: Using the template with LLM (LCEL style)
         print(Fore.YELLOW + "\n3. Using Template with LLM:")
         with get_openai_callback() as cb:
-            chain = prompt2 | self.llm
+            chain = prompt2 | self.llm | StrOutputParser()
             result = chain.invoke({
                 "role": "fitness trainer",
                 "task": "create a workout plan",
                 "constraints": "for beginners, 30 minutes daily, no equipment"
             })
-            print(Fore.WHITE + f"LLM Response: {result.content[:150]}...")
+            print(Fore.WHITE + f"LLM Response: {result[:150]}...")
             print(Fore.CYAN + f"Cost: ${cb.total_cost:.6f}")
     
     def chat_prompt_templates(self):
@@ -184,19 +182,19 @@ class AdvancedPromptTemplates:
         # Example 3: With placeholder for conversation history
         print(Fore.YELLOW + "\n3. Template with Conversation History:")
         
+        from langchain_core.messages import HumanMessage, AIMessage
+        
         prompt_with_history = ChatPromptTemplate.from_messages([
-            SystemMessagePromptTemplate.from_template(
-                "You are a helpful assistant. Here's our conversation history:"
-            ),
+            ("system", "You are a helpful assistant. Here's our conversation history:"),
             MessagesPlaceholder(variable_name="conversation_history"),
-            HumanMessagePromptTemplate.from_template("{user_input}")
+            ("human", "{user_input}")
         ])
         
         # Simulate conversation history
         conversation_history = [
-            ("human", "My name is Alex."),
-            ("ai", "Nice to meet you, Alex!"),
-            ("human", "I'm learning Python.")
+            HumanMessage(content="My name is Alex."),
+            AIMessage(content="Nice to meet you, Alex!"),
+            HumanMessage(content="I'm learning Python.")
         ]
         
         messages = prompt_with_history.format_messages(
@@ -260,9 +258,9 @@ class AdvancedPromptTemplates:
         
         # Test with LLM
         with get_openai_callback() as cb:
-            chain = few_shot_prompt | self.llm
+            chain = few_shot_prompt | self.llm | StrOutputParser()
             result = chain.invoke({"input": "The movie was boring and too long."})
-            print(Fore.GREEN + f"\nLLM Classification: {result.content}")
+            print(Fore.GREEN + f"\nLLM Classification: {result}")
             print(Fore.CYAN + f"Cost: ${cb.total_cost:.6f}")
         
         # Example 2: Few-shot chat template
@@ -366,41 +364,46 @@ class AdvancedPromptTemplates:
         
         # Create vector store for examples
         try:
-            from langchain.vectorstores import FAISS
+            from langchain_community.vectorstores import FAISS
             
-            texts = [ex["query"] for ex in examples]
-            metadatas = [{"answer": ex["answer"]} for ex in examples]
+            # Prepare examples for semantic selector
+            example_strings = [
+                f"Query: {ex['query']}\nAnswer: {ex['answer']}" 
+                for ex in examples
+            ]
             
             vectorstore = FAISS.from_texts(
-                texts=texts,
-                embedding=self.embeddings,
-                metadatas=metadatas
+                texts=example_strings,
+                embedding=self.embeddings
             )
             
             semantic_selector = SemanticSimilarityExampleSelector(
                 vectorstore=vectorstore,
                 k=2,  # Number of examples to select
-                input_keys=["input"]
             )
             
             semantic_prompt = FewShotPromptTemplate(
                 example_selector=semantic_selector,
                 example_prompt=example_prompt,
-                prefix="Answer cooking questions:",
+                prefix="Answer cooking questions based on similar examples:",
                 suffix="Query: {input}\nAnswer:",
                 input_variables=["input"],
                 example_separator="\n---\n"
             )
             
             test_query = "How to prepare spaghetti?"
-            formatted = semantic_prompt.format(input=test_query)
+            
+            # Select examples
+            selected = semantic_selector.select_examples({"input": test_query})
             
             print(Fore.WHITE + f"\nQuery: '{test_query}'")
-            print(Fore.WHITE + "\nSelected similar examples:")
-            print(Fore.WHITE + formatted[:500] + "...")
+            print(Fore.WHITE + f"\nSelected {len(selected)} similar examples")
+            for i, ex in enumerate(selected, 1):
+                print(Fore.CYAN + f"  {i}. {ex}")
             
-        except ImportError:
-            print(Fore.RED + "⚠️ FAISS not installed. Install with: pip install faiss-cpu")
+        except ImportError as e:
+            print(Fore.RED + f"⚠️ FAISS not installed. Install with: pip install faiss-cpu")
+            print(Fore.RED + f"Error: {e}")
     
     def template_partials(self):
         """Demonstrate partial templates"""
@@ -411,8 +414,7 @@ class AdvancedPromptTemplates:
         # Create a template with partial values
         print(Fore.YELLOW + "\n1. Partial Template Application:")
         
-        template = """
-        You are a {role} helping with {domain} tasks.
+        template = """You are a {role} helping with {domain} tasks.
         
         User question: {question}
         
@@ -455,8 +457,7 @@ class AdvancedPromptTemplates:
             "executive": {"level": "executive", "detail": "high-level"}
         }
         
-        base_template = """
-        Explain {concept} to a {level} audience.
+        base_template = """Explain {concept} to a {level} audience.
         Use {detail} language and focus on practical applications.
         
         Explanation:"""
@@ -484,8 +485,7 @@ class AdvancedPromptTemplates:
         # Example 1: Template with output instructions
         print(Fore.YELLOW + "\n1. Template with Output Instructions:")
         
-        template_with_instructions = """
-        Analyze this product review and extract:
+        template_with_instructions = """Analyze this product review and extract:
         1. Overall sentiment (positive/negative/neutral)
         2. Key features mentioned
         3. Suggested improvements
@@ -502,11 +502,9 @@ class AdvancedPromptTemplates:
         )
         
         # Test with a review
-        test_review = """
-        The battery life is amazing - lasts all day! 
+        test_review = """The battery life is amazing - lasts all day! 
         However, the screen is too dim in sunlight and the camera quality could be better.
-        Overall, it's a good phone for the price.
-        """
+        Overall, it's a good phone for the price."""
         
         formatted_prompt = prompt.format(review=test_review)
         
@@ -525,8 +523,7 @@ class AdvancedPromptTemplates:
         # Example 2: Structured data extraction
         print(Fore.YELLOW + "\n2. Structured Data Extraction:")
         
-        extraction_template = """
-        Extract the following information from the text:
+        extraction_template = """Extract the following information from the text:
         
         Text: {text}
         
@@ -545,11 +542,9 @@ class AdvancedPromptTemplates:
             partial_variables={"format_instructions": parser.get_format_instructions()}
         )
         
-        test_text = """
-        John Smith visited London on January 15, 2024. He met with Sarah Johnson 
+        test_text = """John Smith visited London on January 15, 2024. He met with Sarah Johnson 
         to discuss the new project. They plan to meet again in Paris on March 20th.
-        Key decisions: increase budget, hire two developers, launch in Q2.
-        """
+        Key decisions: increase budget, hire two developers, launch in Q2."""
         
         with get_openai_callback() as cb:
             chain = extraction_prompt | self.llm | parser
@@ -568,24 +563,11 @@ class AdvancedPromptTemplates:
         # Example 1: Validating template variables
         print(Fore.YELLOW + "\n1. Template Variable Validation:")
         
-        try:
-            # Template with missing variable
-            template = "Hello {name}, welcome to {city}!"
-            prompt = PromptTemplate(
-                template=template,
-                input_variables=["name"]  # Missing 'city'
-            )
-            # This would raise an error when used
-            print(Fore.RED + "❌ This would fail (missing variable)")
-        except Exception as e:
-            print(Fore.WHITE + f"Validation error: {e}")
-        
         # Correct template
         correct_template = "Hello {name}, welcome to {city}!"
         correct_prompt = PromptTemplate(
             template=correct_template,
-            input_variables=["name", "city"],
-            validate_template=True
+            input_variables=["name", "city"]
         )
         
         print(Fore.GREEN + "\n✅ Correct template validated successfully")
@@ -594,8 +576,7 @@ class AdvancedPromptTemplates:
         # Example 2: Debugging template issues
         print(Fore.YELLOW + "\n2. Template Debugging:")
         
-        complex_template = """
-        Analyze this {document_type}:
+        complex_template = """Analyze this {document_type}:
         
         {content}
         
@@ -643,11 +624,10 @@ class AdvancedPromptTemplates:
         # Save template to dictionary
         template_dict = prompt.dict()
         print(Fore.WHITE + "\nTemplate as dictionary:")
-        print(Fore.WHITE + json.dumps(template_dict, indent=2))
-        
-        # Load from dictionary
-        from langchain.prompts import load_prompt
-        # Note: In practice, you'd save to file and load
+        print(Fore.WHITE + json.dumps({
+            "input_variables": template_dict.get("input_variables", []),
+            "template": template_dict.get("template", "")[:100] + "..."
+        }, indent=2))
         
         print(Fore.GREEN + "\n✅ Templates can be serialized and loaded")
     
@@ -676,22 +656,27 @@ class AdvancedPromptTemplates:
                 print(Fore.YELLOW + "\n👋 Goodbye!")
                 break
             
-            if choice == "1":
-                self.basic_templates()
-            elif choice == "2":
-                self.chat_prompt_templates()
-            elif choice == "3":
-                self.few_shot_templates()
-            elif choice == "4":
-                self.dynamic_example_selection()
-            elif choice == "5":
-                self.template_partials()
-            elif choice == "6":
-                self.custom_output_parsing()
-            elif choice == "7":
-                self.template_validation()
-            else:
-                print(Fore.RED + "❌ Invalid choice")
+            try:
+                if choice == "1":
+                    self.basic_templates()
+                elif choice == "2":
+                    self.chat_prompt_templates()
+                elif choice == "3":
+                    self.few_shot_templates()
+                elif choice == "4":
+                    self.dynamic_example_selection()
+                elif choice == "5":
+                    self.template_partials()
+                elif choice == "6":
+                    self.custom_output_parsing()
+                elif choice == "7":
+                    self.template_validation()
+                else:
+                    print(Fore.RED + "❌ Invalid choice")
+            except Exception as e:
+                print(Fore.RED + f"❌ Error: {e}")
+                import traceback
+                traceback.print_exc()
             
             input(Fore.YELLOW + "\nPress Enter to continue...")
 
@@ -703,6 +688,8 @@ def main():
         
     except Exception as e:
         print(Fore.RED + f"\n❌ Error: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()
