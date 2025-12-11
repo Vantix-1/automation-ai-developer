@@ -1,5 +1,5 @@
 """
-🤖 Multi-Step AI Assistant
+🤖 Multi-Step AI Assistant (Modern LCEL)
 Day 15-16: Production assistant with memory and reasoning
 """
 
@@ -7,9 +7,12 @@ import sys
 from typing import Dict, List
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain, SequentialChain
-from langchain.memory import ConversationBufferMemory
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.chat_history import BaseChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
 
 load_dotenv()
 
@@ -22,75 +25,95 @@ class MultiStepAssistant:
             temperature=0.7,
             max_tokens=500
         )
-        self.memory = ConversationBufferMemory(
-            memory_key="chat_history",
-            return_messages=True
-        )
+        self.parser = StrOutputParser()
+        
+        # Simple in-memory chat history
+        self.chat_history = ChatMessageHistory()
+        
         self.setup_chains()
     
     def setup_chains(self):
-        """Setup reasoning chains"""
+        """Setup reasoning chains using modern LCEL"""
         
-        # Understanding chain
-        self.understand_chain = LLMChain(
-            llm=self.llm,
-            prompt=PromptTemplate(
-                input_variables=["query", "history"],
-                template="""Analyze this query and extract key information:
+        # Step 1: Understanding chain
+        self.understand_prompt = ChatPromptTemplate.from_template(
+            """Analyze this query and extract key information:
 
 Query: {query}
-History: {history}
+Previous conversation: {history}
 
 Extract:
 1. Main topic
 2. User intent
 3. Required information
-4. Any constraints"""
-            ),
-            output_key="analysis"
-        )
-        
-        # Research chain
-        self.research_chain = LLMChain(
-            llm=self.llm,
-            prompt=PromptTemplate(
-                input_variables=["analysis"],
-                template="""Based on this analysis: {analysis}
+4. Any constraints
 
-Gather relevant information and key points."""
-            ),
-            output_key="research"
+Provide a clear analysis."""
         )
         
-        # Synthesis chain
-        self.synthesize_chain = LLMChain(
-            llm=self.llm,
-            prompt=PromptTemplate(
-                input_variables=["analysis", "research"],
-                template="""Combine analysis and research into coherent response:
+        self.understand_chain = (
+            self.understand_prompt 
+            | self.llm 
+            | self.parser
+        )
+        
+        # Step 2: Research chain
+        self.research_prompt = ChatPromptTemplate.from_template(
+            """Based on this analysis: {analysis}
+
+Gather relevant information and key points needed to answer the query."""
+        )
+        
+        self.research_chain = (
+            self.research_prompt 
+            | self.llm 
+            | self.parser
+        )
+        
+        # Step 3: Synthesis chain
+        self.synthesize_prompt = ChatPromptTemplate.from_template(
+            """Combine analysis and research into a coherent response:
 
 Analysis: {analysis}
 Research: {research}
+Original Query: {query}
 
-Create structured, helpful response."""
-            ),
-            output_key="response"
+Create a structured, helpful response that directly answers the user's question."""
         )
         
-        # Validation chain
-        self.validate_chain = LLMChain(
-            llm=self.llm,
-            prompt=PromptTemplate(
-                input_variables=["response", "query"],
-                template="""Validate this response for the original query:
+        self.synthesize_chain = (
+            self.synthesize_prompt 
+            | self.llm 
+            | self.parser
+        )
+        
+        # Step 4: Validation chain
+        self.validate_prompt = ChatPromptTemplate.from_template(
+            """Validate this response for the original query:
 
 Original query: {query}
 Response: {response}
 
-Check for accuracy, completeness, and relevance."""
-            ),
-            output_key="validation"
+Check for accuracy, completeness, and relevance. Is this a good answer?"""
         )
+        
+        self.validate_chain = (
+            self.validate_prompt 
+            | self.llm 
+            | self.parser
+        )
+    
+    def get_history_string(self) -> str:
+        """Get conversation history as string"""
+        messages = self.chat_history.messages
+        if not messages:
+            return "No previous conversation"
+        
+        history_str = ""
+        for msg in messages[-6:]:  # Last 6 messages (3 exchanges)
+            role = "User" if msg.type == "human" else "Assistant"
+            history_str += f"{role}: {msg.content}\n"
+        return history_str
     
     def process_query(self, query: str) -> Dict:
         """Process query through multi-step reasoning"""
@@ -98,75 +121,111 @@ Check for accuracy, completeness, and relevance."""
         print(f"\n🔍 Processing: {query}")
         
         # Get conversation history
-        history = self.memory.load_memory_variables({})
-        history_str = str(history.get("chat_history", ""))
+        history_str = self.get_history_string()
         
-        print("Step 1: Understanding...")
-        analysis = self.understand_chain.run(query=query, history=history_str)
-        
-        print("Step 2: Researching...")
-        research = self.research_chain.run(analysis=analysis)
-        
-        print("Step 3: Synthesizing...")
-        response = self.synthesize_chain.run(analysis=analysis, research=research)
-        
-        print("Step 4: Validating...")
-        validation = self.validate_chain.run(response=response, query=query)
-        
-        # Update memory
-        self.memory.save_context(
-            {"input": query},
-            {"output": response}
-        )
-        
-        return {
-            "response": response,
-            "analysis": analysis,
-            "research": research,
-            "validation": validation
-        }
+        try:
+            # Step 1: Understanding
+            print("📊 Step 1: Understanding...")
+            analysis = self.understand_chain.invoke({
+                "query": query,
+                "history": history_str
+            })
+            
+            # Step 2: Research
+            print("🔬 Step 2: Researching...")
+            research = self.research_chain.invoke({
+                "analysis": analysis
+            })
+            
+            # Step 3: Synthesis
+            print("⚙️ Step 3: Synthesizing...")
+            response = self.synthesize_chain.invoke({
+                "analysis": analysis,
+                "research": research,
+                "query": query
+            })
+            
+            # Step 4: Validation
+            print("✅ Step 4: Validating...")
+            validation = self.validate_chain.invoke({
+                "response": response,
+                "query": query
+            })
+            
+            # Update memory
+            self.chat_history.add_user_message(query)
+            self.chat_history.add_ai_message(response)
+            
+            return {
+                "response": response,
+                "analysis": analysis,
+                "research": research,
+                "validation": validation
+            }
+            
+        except Exception as e:
+            print(f"❌ Error in processing: {e}")
+            return {
+                "response": f"I encountered an error: {str(e)}",
+                "analysis": "",
+                "research": "",
+                "validation": ""
+            }
     
     def chat_loop(self):
         """Interactive chat loop"""
         print("=" * 50)
         print("🤖 MULTI-STEP ASSISTANT")
         print("=" * 50)
-        print("Type 'quit' to exit, 'clear' to clear memory\n")
+        print("Commands:")
+        print("  'quit' - Exit")
+        print("  'clear' - Clear memory")
+        print("  'history' - Show conversation history")
+        print("=" * 50)
         
         while True:
             try:
-                user_input = input("\nYou: ").strip()
+                user_input = input("\n💬 You: ").strip()
                 
                 if user_input.lower() == 'quit':
-                    print("Goodbye!")
+                    print("👋 Goodbye!")
                     break
+                    
                 elif user_input.lower() == 'clear':
-                    self.memory.clear()
-                    print("Memory cleared!")
+                    self.chat_history.clear()
+                    print("🗑️ Memory cleared!")
                     continue
+                    
+                elif user_input.lower() == 'history':
+                    print("\n📜 Conversation History:")
+                    print(self.get_history_string())
+                    continue
+                    
                 elif not user_input:
                     continue
                 
                 result = self.process_query(user_input)
-                print(f"\nAssistant: {result['response']}")
+                print(f"\n🤖 Assistant: {result['response']}")
                 
-                # Show reasoning (optional)
+                # Show reasoning in debug mode
                 if "--debug" in sys.argv:
-                    print(f"\n[Debug] Validation: {result['validation'][:100]}...")
+                    print(f"\n[Debug Analysis]: {result['analysis'][:100]}...")
+                    print(f"[Debug Research]: {result['research'][:100]}...")
+                    print(f"[Debug Validation]: {result['validation'][:100]}...")
                     
             except KeyboardInterrupt:
-                print("\n\nGoodbye!")
+                print("\n\n👋 Goodbye!")
                 break
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"❌ Error: {e}")
 
 def example_workflow():
     """Run example workflow"""
     assistant = MultiStepAssistant()
     
-    print("=" * 50)
-    print("📋 EXAMPLE WORKFLOW: Planning a Tech Talk")
-    print("=" * 50)
+    print("=" * 60)
+    print("📋 EXAMPLE WORKFLOW: Planning a Tech Talk on AI Ethics")
+    print("=" * 60)
     
     queries = [
         "I need to give a 30-minute talk about AI ethics",
@@ -175,16 +234,52 @@ def example_workflow():
         "What are some engaging examples I could use?"
     ]
     
-    for query in queries:
-        print(f"\nYou: {query}")
+    for i, query in enumerate(queries, 1):
+        print(f"\n{'='*60}")
+        print(f"Query {i}: {query}")
+        print('='*60)
+        
         result = assistant.process_query(query)
-        print(f"Assistant: {result['response'][:150]}...")
+        
+        print(f"\n🤖 Response:")
+        print(result['response'])
+        print(f"\n{'─'*60}")
     
-    print("\n✅ Workflow complete!")
+    print("\n" + "="*60)
+    print("✅ Workflow complete!")
+    print("="*60)
+
+def quick_test():
+    """Quick test of the assistant"""
+    print("🧪 Running Quick Test...\n")
+    
+    assistant = MultiStepAssistant()
+    
+    # Single test query
+    test_query = "Explain the concept of chain-of-thought reasoning in AI"
+    result = assistant.process_query(test_query)
+    
+    print(f"\n📊 Test Results:")
+    print(f"✅ Response generated: {len(result['response'])} chars")
+    print(f"✅ Analysis completed: {len(result['analysis'])} chars")
+    print(f"✅ Research completed: {len(result['research'])} chars")
+    print(f"✅ Validation completed: {len(result['validation'])} chars")
+    
+    print(f"\n🤖 Assistant Response:")
+    print(result['response'])
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "example":
-        example_workflow()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "example":
+            example_workflow()
+        elif sys.argv[1] == "test":
+            quick_test()
+        else:
+            print("Usage:")
+            print("  python multi_step_assistant.py           # Interactive chat")
+            print("  python multi_step_assistant.py example   # Run example workflow")
+            print("  python multi_step_assistant.py test      # Quick test")
+            print("  python multi_step_assistant.py --debug   # Interactive with debug info")
     else:
         assistant = MultiStepAssistant()
         assistant.chat_loop()

@@ -1,395 +1,291 @@
-# 🎯 Week 2: Days 14-16 - Sequential Chains & Memory
+# 🎯 Week 2: Days 14-16 - Complete Setup Guide
 
-**Objective:** Master multi-step AI workflows and conversation memory systems
+## ✅ Your Current Status
+
+You have successfully installed LangChain 1.1.3 which uses **modern LCEL** (LangChain Expression Language). All code files have been updated to work with this version.
 
 ---
 
-## 🚀 One-Command Setup
+## 📦 What's Installed
 
 ```bash
-# 1. Navigate to week2_day14-16
-cd week2_day14-16
-
-# 2. Create virtual environment
-python -m venv venv
-
-# 3. Activate it
-# On Windows:
-venv\Scripts\activate
-# On Mac/Linux:
-source venv/bin/activate
-
-# 4. Install ALL dependencies with one command
-pip install -r requirements.txt
-
-# 5. Set your OpenAI API key
-echo "OPENAI_API_KEY=your_key_here" > .env
+langchain==1.1.3                # Main framework (modern version)
+langchain-openai==1.1.1         # OpenAI integration
+langchain-community==0.4.1      # Community integrations
+langchain-core==1.1.3           # Core components
+openai==2.9.0                   # OpenAI API client
+chromadb==1.3.6                 # Vector database
+python-dotenv==1.2.1            # Environment variables
+rich==14.2.0                    # Terminal UI
 ```
 
 ---
 
-## 📊 Day-by-Day Learning Path
+## 🚀 Quick Start
 
-### **Day 14: Sequential Chains**
-**Files:** `sequential_chains.py`
+### 1. Set Up Your API Key
 
-**Concepts:**
-- SimpleSequentialChain for linear workflows
-- SequentialChain for complex branching
-- Variable passing between chains
-- Error handling in production
+```powershell
+# Create .env file in week2_day14-16 directory
+echo "OPENAI_API_KEY=your_key_here" > .env
+```
+
+### 2. Replace Your Python Files
+
+Copy the updated code from the artifacts:
+- ✅ `sequential_chains.py` - Modern LCEL version
+- ✅ `memory_systems.py` - Modern LCEL version
+- ✅ `multi_step_assistant.py` - Modern LCEL version
+- ✅ `chain_routing.py` - Modern LCEL version
+
+### 3. Run the Examples
+
+```powershell
+# Day 14: Sequential Chains
+python sequential_chains.py
+
+# Day 15: Memory Systems
+python memory_systems.py
+
+# Day 15-16: Multi-Step Assistant (interactive)
+python multi_step_assistant.py
+
+# Day 15-16: Multi-Step Assistant (example workflow)
+python multi_step_assistant.py example
+
+# Day 15-16: Multi-Step Assistant (quick test)
+python multi_step_assistant.py test
+
+# Day 16: Chain Routing
+python chain_routing.py
+```
 
 ---
 
-### **Day 15: Memory Systems**
-**Files:** `memory_systems.py`, `multi_step_assistant.py`
+## 🔑 Key Differences: Old vs New LangChain
 
-**Concepts:**
-- ConversationBufferMemory (complete history)
-- ConversationBufferWindowMemory (sliding window)
-- ConversationSummaryMemory (LLM summaries)
-- File persistence for conversations
+### OLD API (Deprecated - doesn't work with 1.x)
+```python
+from langchain.chains import LLMChain, SimpleSequentialChain
+from langchain.prompts import PromptTemplate
+
+# Old way
+chain = LLMChain(llm=llm, prompt=prompt)
+result = chain.run(input)
+```
+
+### NEW API (Modern LCEL - what you need)
+```python
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+# New way - uses | operator
+chain = prompt | llm | StrOutputParser()
+result = chain.invoke({"input": value})
+```
 
 ---
 
-### **Day 16: Chain Routing & Orchestration**
-**Files:** `chain_routing.py`
+## 📚 File Descriptions
 
-**Concepts:**
-- Smart query routing to appropriate chains
+### `sequential_chains.py`
+**Purpose:** Multi-step AI workflows
+
+**Features:**
+- Basic 2-step chain (name → slogan)
+- Content creation pipeline (outline → write → optimize)
+- E-commerce workflow (description → audience → strategy)
+
+**Run:**
+```powershell
+python sequential_chains.py
+```
+
+---
+
+### `memory_systems.py`
+**Purpose:** Conversation memory demonstrations
+
+**Features:**
+- Buffer Memory (complete history)
+- Window Memory (last N messages)
+- Summary Memory (compressed history)
+- File Persistence (save/load conversations)
+
+**Run:**
+```powershell
+python memory_systems.py
+```
+
+---
+
+### `multi_step_assistant.py`
+**Purpose:** Production-ready assistant with 4-step reasoning
+
+**Features:**
+- Understanding → Research → Synthesis → Validation
+- Conversation memory across sessions
+- Interactive chat interface
+- Example workflows
+
+**Run:**
+```powershell
+# Interactive mode
+python multi_step_assistant.py
+
+# Example workflow
+python multi_step_assistant.py example
+
+# Quick test
+python multi_step_assistant.py test
+
+# Debug mode
+python multi_step_assistant.py --debug
+```
+
+---
+
+### `chain_routing.py`
+**Purpose:** Smart query routing and orchestration
+
+**Features:**
+- 4 specialized chains (QA, Analysis, Creative, Code)
+- Automatic query classification
+- Complex workflow orchestration
+- Conditional branching
+
+**Run:**
+```powershell
+python chain_routing.py
+```
+
+---
+
+## 🎯 Learning Path
+
+### Day 14: Sequential Chains
+1. Run `sequential_chains.py`
+2. Understand the `|` operator for chaining
+3. Experiment with different prompts
+4. Create your own 3-step workflow
+
+**Key Concepts:**
+- Chaining prompts with `|`
+- Passing data between steps
+- Error handling
+- Building complex pipelines
+
+---
+
+### Day 15: Memory Systems
+1. Run `memory_systems.py`
+2. Try different memory types
+3. Understand when to use each type
+4. Practice with `multi_step_assistant.py`
+
+**Key Concepts:**
+- Buffer Memory (everything)
+- Window Memory (recent only)
+- Summary Memory (compressed)
+- Persistence (save/load)
+
+---
+
+### Day 16: Chain Routing
+1. Run `chain_routing.py`
+2. Test with different query types
+3. Understand routing logic
+4. Build custom routing rules
+
+**Key Concepts:**
+- Query classification
+- Specialized chains
 - Workflow orchestration
-- Four specialized chains (QA, Analysis, Creative, Code)
 - Fallback mechanisms
 
 ---
 
-## 📦 About requirements.txt
+## 💡 Common Patterns
 
-### What's Included
-
-```bash
-# Check what's installed:
-pip list | grep -E "(langchain|openai|chroma|rich)"
+### Pattern 1: Simple Chain
+```python
+# Prompt → LLM → Parse
+chain = prompt | llm | StrOutputParser()
+result = chain.invoke({"input": "your text"})
 ```
 
-### Core Packages (Must Have)
-- `langchain` - Main framework
-- `langchain-openai` - OpenAI integration
-- `openai` - OpenAI API client
-- `python-dotenv` - Environment management
-- `chromadb` - Vector database for memory
+### Pattern 2: Sequential Chain
+```python
+# Step 1 → Step 2 → Step 3
+chain = (
+    prompt1 | llm | parser
+    | (lambda x: {"result": x})
+    | prompt2 | llm | parser
+)
+```
 
-### Memory & Storage
-- `chromadb` - Stores conversation embeddings
-- `redis` - Fast in-memory caching
-- `pypdf` + `unstructured` - Document processing
+### Pattern 3: With Memory
+```python
+from langchain_community.chat_message_histories import ChatMessageHistory
 
-### UI & Development
-- `rich` - Beautiful terminal output
-- `colorama` - Cross-platform colors
-- `pytest` + `black` + `flake8` - Testing & code quality
+history = ChatMessageHistory()
+history.add_user_message("Hello")
+history.add_ai_message("Hi there!")
 
----
+# Use in prompt
+prompt = ChatPromptTemplate.from_messages([
+    MessagesPlaceholder(variable_name="history"),
+    ("human", "{input}")
+])
+```
 
-## 🛠️ Installation Verification
+### Pattern 4: Routing
+```python
+from langchain_core.runnables import RunnableBranch
 
-```bash
-# Test 1: Check packages
-python -c "
-import langchain, openai, chromadb, rich
-print('✅ All core packages installed')
-print(f'  LangChain: {langchain.__version__}')
-print(f'  OpenAI: {openai.__version__}')
-print(f'  ChromaDB: {chromadb.__version__}')
-"
-
-# Test 2: Basic LangChain functionality
-python -c "
-from langchain_openai import ChatOpenAI
-from langchain.prompts import PromptTemplate
-llm = ChatOpenAI(temperature=0.7)
-prompt = PromptTemplate.from_template('Tell me about {topic}')
-print('✅ LangChain setup successful!')
-"
+branch = RunnableBranch(
+    (condition1, chain1),
+    (condition2, chain2),
+    default_chain  # Fallback
+)
 ```
 
 ---
 
-## 🎯 Run the Examples
+## 🐛 Troubleshooting
 
-### Day 14: Sequential Chains
-```bash
-python sequential_chains.py
-```
-Creates multi-step workflows for content generation and product marketing
+### Issue: "ModuleNotFoundError: No module named 'langchain.chains'"
+**Solution:** The old `langchain.chains` module doesn't exist in 1.x. Use the modern code provided.
 
-### Day 15: Memory Systems
-```bash
-python memory_systems.py
-```
-Shows different memory types and conversation persistence
+### Issue: "AttributeError: 'ChatOpenAI' object has no attribute 'run'"
+**Solution:** Replace `.run()` with `.invoke()`. The API changed in 1.x.
 
-### Day 15-16: Interactive Assistant
-```bash
-python multi_step_assistant.py
-```
-Runs assistant with 4-step reasoning and memory
+### Issue: Memory not persisting
+**Solution:** Make sure you're calling `.add_user_message()` and `.add_ai_message()` after each exchange.
 
-### Day 16: Chain Routing
-```bash
-python chain_routing.py
-```
-Demonstrates smart workflow routing
+### Issue: Chains not connecting properly
+**Solution:** Check that you're passing dictionaries with the correct keys between chain steps.
 
 ---
 
-## 🔧 Troubleshooting
+## ✅ Success Criteria
 
-### Common Issues & Solutions
+### Day 14 Complete When:
+- [ ] Can run `sequential_chains.py` without errors
+- [ ] Understands the `|` operator
+- [ ] Created a custom 3-step workflow
+- [ ] Knows how to pass data between steps
 
-**1. Installation Timeout**
-```bash
-# Install without dependencies first
-pip install --no-deps langchain-openai openai
+### Day 15 Complete When:
+- [ ] Can run `memory_systems.py` without errors
+- [ ] Tried all 4 memory types
+- [ ] Used `multi_step_assistant.py` interactively
+- [ ] Understands when to use each memory type
 
-# Then install the rest
-pip install -r requirements.txt --no-deps
-```
-
-**2. ChromaDB Issues**
-```bash
-# If ChromaDB fails, use in-memory only
-python -c "import chromadb; print('ChromaDB working')"
-```
-
-**3. Memory Errors**
-```bash
-# Reduce memory usage
-export TOKENIZERS_PARALLELISM=false
-```
-
-**4. OpenAI API Key**
-```bash
-# Verify .env file
-cat .env
-# Should show: OPENAI_API_KEY=sk-...
-```
-
-### Quick Fix Commands
-```bash
-# Recreate virtual environment
-deactivate
-rm -rf venv
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+### Day 16 Complete When:
+- [ ] Can run `chain_routing.py` without errors
+- [ ] Tested with different query types
+- [ ] Understands routing logic
+- [ ] Created custom routing rules
 
 ---
-
-## 📚 Package Details
-
-### Essential for Days 14-16
-
-| Package | Purpose | Required |
-|---------|---------|----------|
-| langchain | Core framework | ✅ Yes |
-| langchain-openai | OpenAI integration | ✅ Yes |
-| openai | API client | ✅ Yes |
-| chromadb | Vector storage for memory | ✅ Yes |
-| rich | Terminal UI | ✅ Yes |
-| python-dotenv | Environment variables | ✅ Yes |
-
-### For Advanced Features
-
-| Package | Purpose | Use Case |
-|---------|---------|----------|
-| redis | Fast caching | Persistent session storage |
-| pypdf | PDF processing | Document memory |
-| sentence-transformers | Local embeddings | Offline memory similarity |
-| tiktoken | Token counting | Memory optimization |
-
----
-
-## 🎯 Success Checklist
-
-### After Installation:
-- ✅ `pip install -r requirements.txt` completes without errors
-- ✅ Can import langchain and openai
-- ✅ .env file exists with API key
-- ✅ All 4 Python files run successfully
-
-### After Day 14:
-- ✅ Understand SimpleSequentialChain vs SequentialChain
-- ✅ Can create 3-step content workflow
-- ✅ Know how to pass variables between chains
-
-### After Day 15:
-- ✅ Implemented all 3 memory types
-- ✅ Can save/load conversation history
-- ✅ Built assistant with persistent memory
-
-### After Day 16:
-- ✅ Created custom chain router
-- ✅ Understand workflow orchestration
-- ✅ Built fallback mechanisms
-
----
-
-## 📖 Additional Resources
-
-### Documentation
-- [LangChain Sequential Chains](https://python.langchain.com/docs/modules/chains/)
-- [LangChain Memory](https://python.langchain.com/docs/modules/memory/)
-- [ChromaDB Documentation](https://docs.trychroma.com/)
-
-### Learning Path
-1. Start with `sequential_chains.py` (Day 14)
-2. Move to `memory_systems.py` (Day 15)
-3. Build assistant with `multi_step_assistant.py` (Day 15-16)
-4. Finish with `chain_routing.py` (Day 16)
-
----
-
-## 🚀 One-Click Setup Script
-
-### **setup_week2.sh**
-```bash
-#!/bin/bash
-
-# Create Week 2 directory structure
-mkdir -p week2_day14-16
-
-# Create single requirements.txt
-cat > week2_day14-16/requirements.txt << 'EOF'
-# 🎯 Week 2: Days 14-16 - Sequential Chains & Memory
-langchain==0.1.0
-langchain-openai==0.0.2
-langchain-community==0.0.10
-openai==1.3.0
-tiktoken==0.5.2
-sentence-transformers==2.2.2
-chromadb==0.4.18
-pypdf==3.17.4
-unstructured==0.12.2
-python-dotenv==1.0.0
-pydantic==2.5.0
-orjson==3.9.10
-redis==5.0.1
-rich==13.7.0
-colorama==0.4.6
-tqdm==4.66.1
-pytest==7.4.3
-black==23.11.0
-flake8==6.1.0
-mypy==1.7.0
-EOF
-
-echo "✅ Created week2_day14-16/requirements.txt"
-echo ""
-echo "📦 To install:"
-echo "   cd week2_day14-16"
-echo "   python -m venv venv"
-echo "   source venv/bin/activate  # or venv\Scripts\activate on Windows"
-echo "   pip install -r requirements.txt"
-echo ""
-echo "🚀 Then run:"
-echo "   python sequential_chains.py     # Day 14"
-echo "   python memory_systems.py       # Day 15"
-echo "   python multi_step_assistant.py # Day 15-16"
-echo "   python chain_routing.py        # Day 16"
-```
-
-### Minimal Setup Script (If you want a lighter version)
-```bash
-#!/bin/bash
-
-# Minimal requirements for learning
-cat > week2_day14-16/requirements_minimal.txt << 'EOF'
-# 🎯 Minimal setup for Days 14-16
-langchain==0.1.0
-langchain-openai==0.0.2
-openai==1.3.0
-python-dotenv==1.0.0
-rich==13.7.0
-EOF
-
-echo "✅ Created minimal requirements file"
-echo "📦 Install with: pip install -r requirements_minimal.txt"
-```
-
----
-
-## 📝 How to Use This Setup
-
-### 1. Create the Directory
-```bash
-mkdir -p week2_day14-16
-cd week2_day14-16
-```
-
-### 2. Create requirements.txt
-```bash
-# Copy the requirements.txt content above into a file
-touch requirements.txt
-# Paste the content
-```
-
-### 3. Install Everything
-```bash
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install -r requirements.txt
-```
-
-### 4. Verify Installation
-```bash
-# Run this test
-python -c "
-try:
-    import langchain, openai, chromadb, rich, pydantic
-    print('✅ All packages installed successfully!')
-    print(f'LangChain: {langchain.__version__}')
-except ImportError as e:
-    print(f'❌ Missing package: {e}')
-"
-```
-
----
-
-## 🎯 What This Gives You
-
-### Complete Development Environment:
-- ✅ LangChain with all memory systems
-- ✅ Vector database for persistent memory
-- ✅ Beautiful terminal interfaces
-- ✅ Full testing framework
-- ✅ Code quality tools
-
-### Single File Management:
-- One requirements.txt to rule them all
-- No complex dependency management
-- Easy version control
-- Simple reproduction
-
-### Production Ready:
-- Error handling dependencies
-- Performance tools
-- Monitoring capabilities
-- Security packages
-
----
-
-## 🎓 Next Steps
-
-After completing Days 14-16:
-1. Review and refactor your code
-2. Add error handling to all chains
-3. Create custom memory implementations
-4. Prepare for Week 3: Agents & Tools
-
-**Tip:** Run `pip list` to see all installed packages. Use `pip freeze > requirements.txt` to save your exact versions.
-
----
-
-**Ready to Master AI Workflows?** Complete all three days to become proficient with sequential chains and memory! 🚀
