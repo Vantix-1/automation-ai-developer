@@ -1,5 +1,5 @@
 """
-🔗 LangChain Integration Patterns
+🔗 LangChain Integration Patterns - FIXED VERSION
 Day 21: Production integration with web APIs, databases, and external services
 """
 
@@ -19,11 +19,11 @@ from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
 from langchain_openai import ChatOpenAI
-from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferMemory
-from langchain.agents import AgentExecutor, create_react_agent
-from langchain.tools import Tool
-from langchain import hub
+from langchain.agents import AgentExecutor, create_tool_calling_agent
+from langchain_core.tools import Tool
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import HumanMessage, AIMessage
 
 load_dotenv()
 
@@ -61,33 +61,32 @@ class DatabaseService:
     
     def __init__(self, connection_string: Optional[str] = None):
         self.connection_string = connection_string or os.getenv("DATABASE_URL", "sqlite:///./chat.db")
+        self.messages_store = {}  # In-memory store for demo
         
     async def save_message(self, user_id: str, conversation_id: str, 
                           role: str, content: str) -> str:
         """Save message to database (async)"""
-        # In production, use async database driver
         message_id = f"msg_{datetime.now().timestamp()}"
         
-        # Simulate database operation
-        await asyncio.sleep(0.01)
+        if conversation_id not in self.messages_store:
+            self.messages_store[conversation_id] = []
+        
+        self.messages_store[conversation_id].append({
+            "id": message_id,
+            "user_id": user_id,
+            "role": role,
+            "content": content,
+            "timestamp": datetime.now().isoformat()
+        })
+        
+        await asyncio.sleep(0.01)  # Simulate async operation
         return message_id
     
     async def get_conversation_history(self, conversation_id: str, 
                                       limit: int = 50) -> List[Dict]:
         """Get conversation history from database"""
-        # Simulated data
-        return [
-            {
-                "role": "user",
-                "content": "Hello, how are you?",
-                "timestamp": "2024-01-15T10:30:00"
-            },
-            {
-                "role": "assistant",
-                "content": "I'm doing well, thank you! How can I help you today?",
-                "timestamp": "2024-01-15T10:30:05"
-            }
-        ]
+        messages = self.messages_store.get(conversation_id, [])
+        return messages[-limit:] if messages else []
 
 class CacheService:
     """Service for caching"""
@@ -97,7 +96,14 @@ class CacheService:
         
     async def get(self, key: str) -> Optional[Any]:
         """Get value from cache"""
-        return self.cache.get(key)
+        item = self.cache.get(key)
+        if item:
+            # Check if expired
+            if datetime.now().timestamp() < item["expires_at"]:
+                return item["value"]
+            else:
+                del self.cache[key]
+        return None
     
     async def set(self, key: str, value: Any, ttl: int = 300):
         """Set value in cache"""
@@ -119,7 +125,7 @@ class AnalyticsService:
             "total_requests": 0,
             "successful_responses": 0,
             "failed_responses": 0,
-            "average_response_time": 0
+            "average_response_time": 0.0
         }
     
     async def track_request(self, user_id: str, endpoint: str):
@@ -135,10 +141,11 @@ class AnalyticsService:
         
         # Update average response time
         total = self.metrics["successful_responses"] + self.metrics["failed_responses"]
-        current_avg = self.metrics["average_response_time"]
-        self.metrics["average_response_time"] = (
-            (current_avg * (total - 1) + response_time) / total
-        )
+        if total > 0:
+            current_avg = self.metrics["average_response_time"]
+            self.metrics["average_response_time"] = (
+                (current_avg * (total - 1) + response_time) / total
+            )
     
     def get_metrics(self) -> Dict[str, Any]:
         """Get current metrics"""
@@ -166,50 +173,65 @@ class LangChainIntegration:
         # Create tools for agent
         self.tools = self._create_tools()
         
-        # Create conversation memory
+        # Create conversation memory storage
         self.conversations = {}  # In production, use distributed cache
         
     def _create_tools(self) -> List[Tool]:
         """Create tools for the agent"""
         
         def search_knowledge_base(query: str) -> str:
-            """Search knowledge base"""
+            """Search knowledge base for information"""
             return f"Found information about: {query}"
         
         def calculator(expression: str) -> str:
-            """Calculate mathematical expressions"""
+            """Calculate mathematical expressions. Only use for math operations."""
             try:
-                result = eval(expression, {"__builtins__": {}}, {})
+                # Safe eval with limited scope
+                allowed_names = {
+                    'abs': abs, 'round': round, 'min': min, 'max': max,
+                    'sum': sum, 'pow': pow
+                }
+                result = eval(expression, {"__builtins__": {}}, allowed_names)
                 return str(result)
-            except:
-                return "Error: Invalid expression"
+            except Exception as e:
+                return f"Error: Invalid expression - {str(e)}"
         
         def get_current_time() -> str:
-            """Get current time"""
-            return datetime.now().isoformat()
+            """Get current date and time"""
+            return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         return [
             Tool(
-                name="KnowledgeSearch",
+                name="knowledge_search",
                 func=search_knowledge_base,
-                description="Search knowledge base for information"
+                description="Search knowledge base for information. Input should be a search query string."
             ),
             Tool(
-                name="Calculator",
+                name="calculator",
                 func=calculator,
-                description="Calculate mathematical expressions"
+                description="Calculate mathematical expressions. Input should be a valid math expression like '2+2' or '10*5'."
             ),
             Tool(
-                name="Time",
+                name="get_time",
                 func=get_current_time,
-                description="Get current date and time"
+                description="Get current date and time. No input needed."
             )
         ]
+    
+    def _get_or_create_memory(self, conversation_id: str) -> ConversationBufferMemory:
+        """Get or create conversation memory"""
+        if conversation_id not in self.conversations:
+            self.conversations[conversation_id] = ConversationBufferMemory(
+                memory_key="chat_history",
+                return_messages=True
+            )
+        return self.conversations[conversation_id]
     
     async def process_chat(self, request: ChatRequest) -> ChatResponse:
         """Process chat request with full integration"""
         
         start_time = datetime.now()
+        conversation_id = request.conversation_id or f"conv_{datetime.now().timestamp()}"
         
         try:
             # Track request
@@ -223,33 +245,62 @@ class LangChainIntegration:
             cached_response = await self.cache_service.get(cache_key)
             
             if cached_response:
-                response_text = cached_response["value"]
+                response_text = cached_response
             else:
-                # Create or get conversation memory
-                if request.conversation_id not in self.conversations:
-                    self.conversations[request.conversation_id] = ConversationBufferMemory()
+                # Get or create conversation memory
+                memory = self._get_or_create_memory(conversation_id)
                 
-                memory = self.conversations[request.conversation_id]
+                # Create prompt template
+                prompt = ChatPromptTemplate.from_messages([
+                    ("system", "You are a helpful AI assistant. Use the available tools when needed to answer questions accurately."),
+                    MessagesPlaceholder(variable_name="chat_history"),
+                    ("human", "{input}"),
+                    MessagesPlaceholder(variable_name="agent_scratchpad"),
+                ])
                 
-                # Create conversation chain
-                conversation = ConversationChain(
-                    llm=self.llm,
-                    memory=memory,
-                    verbose=True
+                # Create agent
+                agent = create_tool_calling_agent(self.llm, self.tools, prompt)
+                agent_executor = AgentExecutor(
+                    agent=agent,
+                    tools=self.tools,
+                    verbose=True,
+                    handle_parsing_errors=True,
+                    max_iterations=3
                 )
                 
-                # Generate response
-                response_text = conversation.predict(input=request.message)
+                # Get chat history
+                chat_history = memory.load_memory_variables({})
+                
+                # Invoke agent
+                result = await agent_executor.ainvoke({
+                    "input": request.message,
+                    "chat_history": chat_history.get("chat_history", [])
+                })
+                
+                response_text = result.get("output", "I apologize, I couldn't generate a response.")
+                
+                # Save to memory
+                memory.save_context(
+                    {"input": request.message},
+                    {"output": response_text}
+                )
                 
                 # Cache response
                 await self.cache_service.set(cache_key, response_text, ttl=300)
             
             # Save to database
-            message_id = await self.db_service.save_message(
+            await self.db_service.save_message(
                 request.user_id,
-                request.conversation_id or "new",
+                conversation_id,
                 "user",
                 request.message
+            )
+            
+            message_id = await self.db_service.save_message(
+                request.user_id,
+                conversation_id,
+                "assistant",
+                response_text
             )
             
             # Track successful response
@@ -258,7 +309,7 @@ class LangChainIntegration:
             
             return ChatResponse(
                 response=response_text,
-                conversation_id=request.conversation_id or "new",
+                conversation_id=conversation_id,
                 message_id=message_id,
                 timestamp=datetime.now().isoformat()
             )
@@ -278,14 +329,42 @@ class LangChainIntegration:
         
         async def generate_stream():
             """Generate streaming response"""
-            # Simulate streaming for demonstration
-            words = f"Processing your message: {request.message}".split()
-            
-            for word in words:
-                yield f"data: {json.dumps({'token': word})}\n\n"
-                await asyncio.sleep(0.1)
-            
-            yield "data: [DONE]\n\n"
+            try:
+                conversation_id = request.conversation_id or f"conv_{datetime.now().timestamp()}"
+                memory = self._get_or_create_memory(conversation_id)
+                
+                # Create simple streaming chain
+                prompt = ChatPromptTemplate.from_messages([
+                    ("system", "You are a helpful AI assistant."),
+                    MessagesPlaceholder(variable_name="chat_history"),
+                    ("human", "{input}"),
+                ])
+                
+                # Get chat history
+                chat_history = memory.load_memory_variables({})
+                
+                # Stream response
+                full_response = ""
+                async for chunk in self.llm.astream(
+                    prompt.format_messages(
+                        input=request.message,
+                        chat_history=chat_history.get("chat_history", [])
+                    )
+                ):
+                    if hasattr(chunk, 'content') and chunk.content:
+                        full_response += chunk.content
+                        yield f"data: {json.dumps({'token': chunk.content})}\n\n"
+                
+                # Save to memory
+                memory.save_context(
+                    {"input": request.message},
+                    {"output": full_response}
+                )
+                
+                yield "data: [DONE]\n\n"
+                
+            except Exception as e:
+                yield f"data: {json.dumps({'error': str(e)})}\n\n"
         
         return StreamingResponse(
             generate_stream(),
@@ -365,10 +444,12 @@ async def get_history(conversation_id: str):
 async def upload_document(document: DocumentUpload):
     """Upload document for processing"""
     # In production, process document with LangChain document loaders
+    word_count = len(document.content.split())
     return {
         "document_id": f"doc_{datetime.now().timestamp()}",
         "status": "processed",
-        "chunks": len(document.content.split()) // 100 + 1
+        "chunks": word_count // 100 + 1,
+        "word_count": word_count
     }
 
 @app.post("/search")
@@ -473,9 +554,13 @@ def run_demo_api():
     
     print(f"🌐 Starting demo API at http://{config['host']}:{config['port']}")
     print(f"📚 API Documentation: http://{config['host']}:{config['port']}/docs")
+    print("\n💡 Try these endpoints:")
+    print(f"   - POST http://localhost:{config['port']}/chat")
+    print(f"   - GET  http://localhost:{config['port']}/metrics")
+    print(f"   - GET  http://localhost:{config['port']}/health")
     
     uvicorn.run(
-        "langchain_integration:app",
+        app,
         host=config["host"],
         port=config["port"],
         reload=config["reload"]
@@ -489,25 +574,49 @@ async def test_integration():
     
     # Test chat processing
     request = ChatRequest(
-        message="What is LangChain?",
+        message="What is 2 + 2?",
         user_id="test_user",
         conversation_id="test_conv"
     )
     
     try:
+        print("\n1️⃣ Testing chat processing...")
         response = await integration.process_chat(request)
         print(f"✅ Chat test successful:")
-        print(f"   Response: {response.response[:100]}...")
+        print(f"   Response: {response.response[:150]}...")
         print(f"   Conversation ID: {response.conversation_id}")
+        print(f"   Message ID: {response.message_id}")
+        
+        # Test follow-up message
+        print("\n2️⃣ Testing conversation memory...")
+        request2 = ChatRequest(
+            message="What was the previous number?",
+            user_id="test_user",
+            conversation_id=response.conversation_id
+        )
+        response2 = await integration.process_chat(request2)
+        print(f"✅ Memory test successful:")
+        print(f"   Response: {response2.response[:150]}...")
         
         # Test metrics
+        print("\n3️⃣ Testing system metrics...")
         metrics = await integration.get_system_metrics()
         print(f"✅ Metrics test successful:")
         print(f"   Total requests: {metrics['analytics']['total_requests']}")
-        print(f"   Average response time: {metrics['analytics']['average_response_time']:.2f}s")
+        print(f"   Successful responses: {metrics['analytics']['successful_responses']}")
+        print(f"   Average response time: {metrics['analytics']['average_response_time']:.3f}s")
+        print(f"   Active conversations: {metrics['active_conversations']}")
+        
+        # Test conversation history
+        print("\n4️⃣ Testing conversation history...")
+        history = await integration.get_conversation_history(response.conversation_id)
+        print(f"✅ History test successful:")
+        print(f"   Messages in conversation: {len(history)}")
         
     except Exception as e:
         print(f"❌ Test failed: {e}")
+        import traceback
+        traceback.print_exc()
 
 def demo_cli_interface():
     """Demo CLI interface for the integration"""
@@ -533,9 +642,9 @@ def demo_cli_interface():
         for key, value in config.items():
             print(f"  {key}: {value}")
     elif choice == "4":
-        print("Goodbye!")
+        print("👋 Goodbye!")
     else:
-        print("Invalid choice")
+        print("❌ Invalid choice")
 
 if __name__ == "__main__":
     import sys

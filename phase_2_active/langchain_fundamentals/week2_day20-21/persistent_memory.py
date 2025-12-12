@@ -1,27 +1,55 @@
 """
-💾 Persistent Memory Systems
+💾 Persistent Memory Systems - TELEMETRY-FREE VERSION
 Day 20: Advanced memory storage with databases and file systems
 """
 
 import os
+import sys
 import json
 import pickle
 import sqlite3
-from datetime import datetime
+import warnings
+import logging
+from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from contextlib import contextmanager
+from contextlib import contextmanager, redirect_stderr
+from io import StringIO
 from dotenv import load_dotenv
+
+# ========== SUPPRESS ALL CHROMADB TELEMETRY ==========
+# Must be done BEFORE importing chromadb
+os.environ['ANONYMIZED_TELEMETRY'] = 'False'
+os.environ['CHROMA_TELEMETRY'] = 'False'
+warnings.filterwarnings('ignore', category=UserWarning)
+warnings.filterwarnings('ignore', module='chromadb')
+logging.getLogger("chromadb").setLevel(logging.CRITICAL)
+logging.getLogger("chromadb.telemetry").setLevel(logging.CRITICAL)
+
+# Redirect stderr to suppress telemetry messages
+class TelemetryFilter:
+    """Filter out telemetry messages from stderr"""
+    def __init__(self, stream):
+        self.stream = stream
+        
+    def write(self, text):
+        if 'telemetry' not in text.lower() and 'capture()' not in text:
+            self.stream.write(text)
+    
+    def flush(self):
+        self.stream.flush()
+
+# Apply the filter
+original_stderr = sys.stderr
+sys.stderr = TelemetryFilter(original_stderr)
 
 import chromadb
 from chromadb.config import Settings
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain.memory import ConversationBufferMemory, VectorStoreRetrieverMemory
-from langchain.vectorstores import Chroma, FAISS
+from langchain.memory import ConversationBufferMemory
+from langchain_community.vectorstores import Chroma, FAISS
 from langchain.schema import Document
-from langchain.storage import LocalFileStore, InMemoryStore
-from langchain.storage.file_system import LocalFileStore
 
 load_dotenv()
 
@@ -157,16 +185,25 @@ class VectorMemoryStore:
     def __init__(self, persist_directory: str = "./vector_memory"):
         self.persist_directory = persist_directory
         self.embeddings = OpenAIEmbeddings()
+        
+        # Create client with all telemetry disabled
         self.client = chromadb.PersistentClient(
             path=persist_directory,
-            settings=Settings(anonymized_telemetry=False)
+            settings=Settings(
+                anonymized_telemetry=False,
+                allow_reset=True,
+                is_persistent=True
+            )
         )
         
         # Create or get collection
-        self.collection = self.client.get_or_create_collection(
-            name="conversation_memory",
-            metadata={"hnsw:space": "cosine"}
-        )
+        try:
+            self.collection = self.client.get_collection(name="conversation_memory")
+        except:
+            self.collection = self.client.create_collection(
+                name="conversation_memory",
+                metadata={"hnsw:space": "cosine"}
+            )
     
     def store_memory(self, text: str, metadata: Dict[str, Any]) -> str:
         """Store memory with embeddings"""
@@ -174,7 +211,7 @@ class VectorMemoryStore:
         embedding = self.embeddings.embed_query(text)
         
         # Create unique ID
-        memory_id = f"memory_{datetime.now().timestamp()}"
+        memory_id = f"memory_{datetime.now().timestamp()}_{hash(text) % 10000}"
         
         # Store in ChromaDB
         self.collection.add(
@@ -188,25 +225,32 @@ class VectorMemoryStore:
     
     def search_memories(self, query: str, k: int = 5, filters: Optional[Dict] = None) -> List[Dict]:
         """Search memories semantically"""
+        # Get collection count to avoid requesting more than available
+        collection_count = self.collection.count()
+        if collection_count == 0:
+            return []
+        
+        actual_k = min(k, collection_count)
+        
         # Get query embedding
         query_embedding = self.embeddings.embed_query(query)
         
         # Search in collection
         results = self.collection.query(
             query_embeddings=[query_embedding],
-            n_results=k,
-            where=filters if filters else {}
+            n_results=actual_k,
+            where=filters if filters else None
         )
         
         # Format results
         memories = []
-        if results['ids'][0]:
+        if results['ids'] and results['ids'][0]:
             for i, memory_id in enumerate(results['ids'][0]):
                 memories.append({
                     "id": memory_id,
                     "text": results['documents'][0][i],
                     "metadata": results['metadatas'][0][i],
-                    "score": 1 - results['distances'][0][i] if results['distances'] else 0
+                    "score": 1 - results['distances'][0][i] if results['distances'] and results['distances'][0] else 0
                 })
         
         return memories
@@ -304,15 +348,14 @@ class HybridMemorySystem:
         ])
         
         # Generate summary using LLM
-        prompt = f"""
-        Summarize this conversation:
+        prompt = f"""Summarize this conversation:
         
-        {messages_text}
+{messages_text}
+
+Provide a concise summary of the key topics discussed."""
         
-        Provide a concise summary of the key topics discussed.
-        """
-        
-        summary = self.llm.predict(prompt)
+        response_obj = self.llm.invoke(prompt)
+        summary = response_obj.content if hasattr(response_obj, 'content') else str(response_obj)
         return summary
     
     def search_conversations(self, user_id: str, query: str) -> List[Dict]:
@@ -373,7 +416,7 @@ class HybridMemorySystem:
             for (conv_id,) in old_conversations:
                 self.sqlite_store.delete_conversation(conv_id)
             
-            print(f"Cleaned up {len(old_conversations)} old conversations")
+            print(f"🧹 Cleaned up {len(old_conversations)} old conversations")
 
 class PersistentMemoryAgent:
     """Agent with persistent memory capabilities"""
@@ -431,7 +474,8 @@ class PersistentMemoryAgent:
         prompt = self._build_prompt(message, context, past_conversations)
         
         # Generate response
-        response = self.llm.predict(prompt)
+        response_obj = self.llm.invoke(prompt)
+        response = response_obj.content if hasattr(response_obj, 'content') else str(response_obj)
         
         # Add assistant response
         self.memory_system.add_message(
@@ -539,7 +583,7 @@ class MultiUserMemoryManager:
         self.storage_dir.mkdir(exist_ok=True)
         
         # User database
-        self.users_db = SQLiteMemoryStore(self.storage_dir / "users.db")
+        self.users_db = SQLiteMemoryStore(str(self.storage_dir / "users.db"))
         
         # Separate vector store per user
         self.user_stores = {}
@@ -550,16 +594,12 @@ class MultiUserMemoryManager:
             user_dir = self.storage_dir / user_id
             user_dir.mkdir(exist_ok=True)
             
-            # Configure SQLite path
-            db_path = str(user_dir / "conversations.db")
+            # Create hybrid system for user with custom paths
+            memory_system = HybridMemorySystem()
+            memory_system.sqlite_store = SQLiteMemoryStore(str(user_dir / "conversations.db"))
+            memory_system.vector_store = VectorMemoryStore(str(user_dir / "vector_store"))
             
-            # Create hybrid system for user
-            sqlite_store = SQLiteMemoryStore(db_path)
-            vector_store = VectorMemoryStore(str(user_dir / "vector_store"))
-            
-            # We need to adapt to use our stores
-            # For simplicity, creating a new instance
-            self.user_stores[user_id] = HybridMemorySystem()
+            self.user_stores[user_id] = memory_system
         
         return self.user_stores[user_id]
 
@@ -580,7 +620,7 @@ def main():
     
     users = ["alice", "bob", "charlie"]
     for user in users:
-        print(f"\nTesting memory for user: {user}")
+        print(f"\n🔧 Testing memory for user: {user}")
         user_store = manager.get_user_store(user)
         
         # Create conversation
@@ -590,13 +630,12 @@ def main():
         user_store.add_message(conv.id, "user", f"Hello, I'm {user}")
         user_store.add_message(conv.id, "assistant", f"Nice to meet you, {user}!")
         
-        print(f"   Created conversation: {conv.title}")
-        print(f"   Messages: {conv.metadata.get('message_count', 0)}")
+        print(f"   ✅ Created conversation: {conv.title}")
+        print(f"   📝 Messages: {conv.metadata.get('message_count', 0)}")
     
     print("\n" + "=" * 60)
     print("✅ Day 20 Complete!")
-    print("Next: LangChain Integration (Day 21)")
+    print("🎯 Next: LangChain Integration (Day 21)")
 
 if __name__ == "__main__":
-    from datetime import timedelta
     main()
