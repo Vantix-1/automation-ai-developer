@@ -1,23 +1,4 @@
-# 🎯 Week 2: Days 14-16 - Complete Setup Guide
-
-## ✅ Your Current Status
-
-You have successfully installed LangChain 1.1.3 which uses **modern LCEL** (LangChain Expression Language). All code files have been updated to work with this version.
-
----
-
-## 📦 What's Installed
-
-```bash
-langchain==1.1.3                # Main framework (modern version)
-langchain-openai==1.1.1         # OpenAI integration
-langchain-community==0.4.1      # Community integrations
-langchain-core==1.1.3           # Core components
-openai==2.9.0                   # OpenAI API client
-chromadb==1.3.6                 # Vector database
-python-dotenv==1.2.1            # Environment variables
-rich==14.2.0                    # Terminal UI
-```
+# Complete Setup Guide
 
 ---
 
@@ -41,50 +22,27 @@ Copy the updated code from the artifacts:
 ### 3. Run the Examples
 
 ```powershell
-# Day 14: Sequential Chains
+# Sequential Chains
 python sequential_chains.py
 
-# Day 15: Memory Systems
+# Memory Systems
 python memory_systems.py
 
-# Day 15-16: Multi-Step Assistant (interactive)
+# Multi-Step Assistant (interactive)
 python multi_step_assistant.py
 
-# Day 15-16: Multi-Step Assistant (example workflow)
+# Multi-Step Assistant (example workflow)
 python multi_step_assistant.py example
 
-# Day 15-16: Multi-Step Assistant (quick test)
+# Multi-Step Assistant (quick test)
 python multi_step_assistant.py test
 
-# Day 16: Chain Routing
+# Chain Routing
 python chain_routing.py
 ```
 
 ---
 
-## 🔑 Key Differences: Old vs New LangChain
-
-### OLD API (Deprecated - doesn't work with 1.x)
-```python
-from langchain.chains import LLMChain, SimpleSequentialChain
-from langchain.prompts import PromptTemplate
-
-# Old way
-chain = LLMChain(llm=llm, prompt=prompt)
-result = chain.run(input)
-```
-
-### NEW API (Modern LCEL - what you need)
-```python
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-
-# New way - uses | operator
-chain = prompt | llm | StrOutputParser()
-result = chain.invoke({"input": value})
-```
-
----
 
 ## 📚 File Descriptions
 
@@ -163,7 +121,7 @@ python chain_routing.py
 
 ## 🎯 Learning Path
 
-### Day 14: Sequential Chains
+### Sequential Chains
 1. Run `sequential_chains.py`
 2. Understand the `|` operator for chaining
 3. Experiment with different prompts
@@ -177,7 +135,7 @@ python chain_routing.py
 
 ---
 
-### Day 15: Memory Systems
+### Memory Systems
 1. Run `memory_systems.py`
 2. Try different memory types
 3. Understand when to use each type
@@ -191,7 +149,7 @@ python chain_routing.py
 
 ---
 
-### Day 16: Chain Routing
+### Chain Routing
 1. Run `chain_routing.py`
 2. Test with different query types
 3. Understand routing logic
@@ -265,27 +223,5 @@ branch = RunnableBranch(
 
 ### Issue: Chains not connecting properly
 **Solution:** Check that you're passing dictionaries with the correct keys between chain steps.
-
----
-
-## ✅ Success Criteria
-
-### Day 14 Complete When:
-- [ ] Can run `sequential_chains.py` without errors
-- [ ] Understands the `|` operator
-- [ ] Created a custom 3-step workflow
-- [ ] Knows how to pass data between steps
-
-### Day 15 Complete When:
-- [ ] Can run `memory_systems.py` without errors
-- [ ] Tried all 4 memory types
-- [ ] Used `multi_step_assistant.py` interactively
-- [ ] Understands when to use each memory type
-
-### Day 16 Complete When:
-- [ ] Can run `chain_routing.py` without errors
-- [ ] Tested with different query types
-- [ ] Understands routing logic
-- [ ] Created custom routing rules
 
 ---

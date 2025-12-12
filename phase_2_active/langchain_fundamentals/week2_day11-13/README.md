@@ -1,18 +1,4 @@
-# Week 2: Days 11-13 - LangChain Fundamentals
-
-## 🎯 Learning Objectives
-- Understand LangChain architecture and core concepts
-- Master prompt templates and chain construction
-- Learn to build and customize LLM chains
-- Implement conversation memory systems
-- Work with text embeddings and vector stores
-- Develop cost-effective LangChain applications
-
-## 📋 Prerequisites
-- ✅ Completed Week 1: All 10 days (OpenAI API mastery)
-- ✅ OpenAI API key in `.env` file
-- ✅ Python 3.11+ installed
-- ✅ Basic understanding of LLMs and APIs
+# LangChain Fundamentals
 
 ## 🚀 Quick Start
 

@@ -1,4 +1,4 @@
-# 🎯 Week 2: Days 17-19 - Agents & Tools
+# Agents & Tools
 
 **Objective:** Master LangChain agents and build custom tools for specialized tasks
 
@@ -24,7 +24,7 @@ pip install duckduckgo-search wikipedia
 
 ## 📊 Day-by-Day Learning
 
-### Day 17: Agent Fundamentals
+### Agent Fundamentals
 **File:** `agents_intro.py`
 
 - ✅ Understand LangChain agents architecture
@@ -32,7 +32,7 @@ pip install duckduckgo-search wikipedia
 - ✅ Learn ReAct (Reasoning + Acting) pattern
 - ✅ Build agent with calculator, text processing, and weather tools
 
-### Day 18: Custom Tools
+### Custom Tools
 **File:** `custom_tools.py`
 
 - ✅ Create custom tools from scratch
@@ -41,7 +41,7 @@ pip install duckduckgo-search wikipedia
 - ✅ Create API integration tools
 - ✅ Learn tool decorator patterns
 
-### Day 19: Research Agent
+### Research Agent
 **File:** `research_agent.py`
 
 - ✅ Build web search capabilities
@@ -97,26 +97,7 @@ pip install google-search-results
 pip install python-magic
 ```
 
-## 🎯 Learning Objectives
-
-### By Day 17 End:
-- Understand agent architecture
-- Can create basic agents with tools
-- Know ReAct pattern implementation
-- Can debug agent execution
-
-### By Day 18 End:
-- Can build custom tools from scratch
-- Understand tool input/output patterns
-- Can integrate external APIs
-- Know tool testing strategies
-
-### By Day 19 End:
-- Can build research agents
-- Understand web search integration
-- Can manage citations and sources
-- Know research workflow design
-
+---
 ## 🔧 Key Concepts
 
 ### 1. Agents vs Chains
@@ -197,7 +178,7 @@ pip cache purge
 
 ## 🎓 Advanced Topics
 
-### After Completing Days 17-19:
+### After:
 - **Multi-Agent Systems:** Agents that collaborate
 - **Tool Orchestration:** Complex tool workflows
 - **Memory in Agents:** Stateful agent conversations
