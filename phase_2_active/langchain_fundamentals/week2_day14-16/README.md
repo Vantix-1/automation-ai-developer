@@ -14,10 +14,10 @@ echo "OPENAI_API_KEY=your_key_here" > .env
 ### 2. Replace Your Python Files
 
 Copy the updated code from the artifacts:
-- ✅ `sequential_chains.py` - Modern LCEL version
-- ✅ `memory_systems.py` - Modern LCEL version
-- ✅ `multi_step_assistant.py` - Modern LCEL version
-- ✅ `chain_routing.py` - Modern LCEL version
+- ✅ `sequential_chains.py`
+- ✅ `memory_systems.py`
+- ✅ `multi_step_assistant.py`
+- ✅ `chain_routing.py`
 
 ### 3. Run the Examples
 
