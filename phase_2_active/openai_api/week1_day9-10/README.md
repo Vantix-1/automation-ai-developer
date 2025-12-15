@@ -1,4 +1,4 @@
-# Week 1: Days 9-10 - Function Calling & Structured Outputs
+# Function Calling & Structured Outputs
 
 ---
 
