@@ -10,14 +10,6 @@
 - Create intelligent assistants that interact with real-world APIs
 - Learn advanced prompt engineering for data extraction
 
----
-
-## 📋 Prerequisites
-
-- ✅ Completed Week 1: Days 6-8 (Advanced Tools)
-- ✅ OpenAI API key in `.env` file
-- ✅ Python 3.11+ installed
-- ✅ Understanding of basic API concepts
 
 ---
 
