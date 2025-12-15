@@ -1,4 +1,4 @@
-# Week 1: Days 1-2 - OpenAI API Fundamentals
+# OpenAI API Fundamentals
 
 ## 🎯 Learning Objectives
 
