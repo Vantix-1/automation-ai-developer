@@ -58,7 +58,7 @@ class EmbeddingDemo:
                     embedding=np.array(data.embedding),
                     model="text-embedding-ada-002",
                     dimensions=len(data.embedding),
-                    tokens=data.usage.total_tokens
+                    tokens=response.usage.total_tokens
                 )
                 self.results.append(result)
                 print(f"  ✓ '{texts[i][:30]}...' → {result.dimensions} dimensions")
@@ -185,23 +185,28 @@ class EmbeddingDemo:
                 continue
             
             # Calculate cosine similarities
-            embeddings = np.array([r.embedding for r in results])
-            
-            # Normalize for cosine similarity
-            norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
-            normalized = embeddings / norms
-            
-            # Cosine similarity matrix
-            similarity_matrix = np.dot(normalized, normalized.T)
-            
-            # Print top similar pairs
-            print("  Most similar pairs:")
-            for i in range(len(results)):
-                for j in range(i + 1, len(results)):
-                    sim = similarity_matrix[i, j]
-                    text1 = results[i].text[:20] + "..." if len(results[i].text) > 20 else results[i].text
-                    text2 = results[j].text[:20] + "..." if len(results[j].text) > 20 else results[j].text
-                    print(f"    '{text1}' ↔ '{text2}': {sim:.3f}")
+            # FIXED: Ensure all embeddings have the same shape
+            try:
+                embeddings = np.array([r.embedding for r in results])
+                
+                # Normalize for cosine similarity
+                norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+                normalized = embeddings / norms
+                
+                # Cosine similarity matrix
+                similarity_matrix = np.dot(normalized, normalized.T)
+                
+                # Print top similar pairs
+                print("  Most similar pairs:")
+                for i in range(len(results)):
+                    for j in range(i + 1, len(results)):
+                        sim = similarity_matrix[i, j]
+                        text1 = results[i].text[:20] + "..." if len(results[i].text) > 20 else results[i].text
+                        text2 = results[j].text[:20] + "..." if len(results[j].text) > 20 else results[j].text
+                        print(f"    '{text1}' ↔ '{text2}': {sim:.3f}")
+            except ValueError as e:
+                print(f"  ⚠️ Could not calculate similarities: {e}")
+                print(f"  Embedding shapes: {[r.embedding.shape for r in results[:3]]}")
     
     def visualize_embeddings(self):
         """Visualize embeddings in 2D space"""
@@ -212,19 +217,30 @@ class EmbeddingDemo:
         print("\n🎨 Visualizing Embeddings")
         print("=" * 50)
         
-        # Group by model for color coding
-        models = list(set([r.model for r in self.results]))
-        colors = plt.cm.Set1(np.linspace(0, 1, len(models)))
-        model_to_color = {model: colors[i] for i, model in enumerate(models)}
+        # Group by model and dimension to ensure compatibility
+        by_model_dim = {}
+        for result in self.results:
+            key = (result.model, result.dimensions)
+            if key not in by_model_dim:
+                by_model_dim[key] = []
+            by_model_dim[key].append(result)
+        
+        # Find the largest group for visualization
+        largest_group = max(by_model_dim.values(), key=len)
+        
+        if len(largest_group) < 3:
+            print("⚠️ Need at least 3 embeddings from the same model for visualization")
+            return
+        
+        results_to_plot = largest_group
+        print(f"  Visualizing {len(results_to_plot)} embeddings from {results_to_plot[0].model}")
         
         # Create figure with subplots
         fig, axes = plt.subplots(1, 2, figsize=(14, 6))
         
         # Prepare data
-        embeddings = np.array([r.embedding for r in self.results])
-        texts = [r.text[:30] + "..." if len(r.text) > 30 else r.text for r in self.results]
-        model_labels = [r.model for r in self.results]
-        colors_list = [model_to_color[m] for m in model_labels]
+        embeddings = np.array([r.embedding for r in results_to_plot])
+        texts = [r.text[:30] + "..." if len(r.text) > 30 else r.text for r in results_to_plot]
         
         # Method 1: PCA
         print("  Applying PCA...")
@@ -233,10 +249,10 @@ class EmbeddingDemo:
         
         ax1 = axes[0]
         scatter1 = ax1.scatter(embeddings_pca[:, 0], embeddings_pca[:, 1], 
-                              c=colors_list, alpha=0.7, s=100)
-        ax1.set_title('PCA Visualization of Embeddings')
-        ax1.set_xlabel('Principal Component 1')
-        ax1.set_ylabel('Principal Component 2')
+                              c=range(len(results_to_plot)), cmap='viridis', alpha=0.7, s=100)
+        ax1.set_title(f'PCA Visualization\n{results_to_plot[0].model}')
+        ax1.set_xlabel(f'PC1 ({pca.explained_variance_ratio_[0]:.1%} var)')
+        ax1.set_ylabel(f'PC2 ({pca.explained_variance_ratio_[1]:.1%} var)')
         
         # Add text labels
         for i, (x, y) in enumerate(embeddings_pca):
@@ -244,13 +260,14 @@ class EmbeddingDemo:
         
         # Method 2: t-SNE
         print("  Applying t-SNE (this may take a moment)...")
-        tsne = TSNE(n_components=2, random_state=42, perplexity=min(5, len(embeddings)-1))
+        perplexity = min(5, len(embeddings) - 1)
+        tsne = TSNE(n_components=2, random_state=42, perplexity=perplexity)
         embeddings_tsne = tsne.fit_transform(embeddings)
         
         ax2 = axes[1]
         scatter2 = ax2.scatter(embeddings_tsne[:, 0], embeddings_tsne[:, 1], 
-                              c=colors_list, alpha=0.7, s=100)
-        ax2.set_title('t-SNE Visualization of Embeddings')
+                              c=range(len(results_to_plot)), cmap='viridis', alpha=0.7, s=100)
+        ax2.set_title(f't-SNE Visualization\n{results_to_plot[0].model}')
         ax2.set_xlabel('t-SNE Dimension 1')
         ax2.set_ylabel('t-SNE Dimension 2')
         
@@ -258,13 +275,8 @@ class EmbeddingDemo:
         for i, (x, y) in enumerate(embeddings_tsne):
             ax2.annotate(f"{i+1}", (x, y), fontsize=8, ha='center')
         
-        # Create legend
-        from matplotlib.lines import Line2D
-        legend_elements = [Line2D([0], [0], marker='o', color='w', 
-                                 markerfacecolor=model_to_color[model], 
-                                 label=model, markersize=10) 
-                          for model in models]
-        fig.legend(handles=legend_elements, loc='lower center', ncol=len(models))
+        # Add colorbar
+        plt.colorbar(scatter2, ax=axes, label='Embedding Index')
         
         # Add text index
         print("\n  Text Index:")
@@ -272,7 +284,6 @@ class EmbeddingDemo:
             print(f"    {i+1}. {text}")
         
         plt.tight_layout()
-        plt.subplots_adjust(bottom=0.2)
         plt.savefig('embeddings_visualization.png', dpi=150, bbox_inches='tight')
         print(f"\n  💾 Visualization saved as 'embeddings_visualization.png'")
         plt.show()
