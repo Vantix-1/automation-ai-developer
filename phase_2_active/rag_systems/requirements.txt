@@ -1,6 +1,5 @@
 # 🎯 Weeks 5-6: RAG Systems & Vector Databases
-# Python 3.13 Compatible - Optimized Version
-# Last Updated: December 2025
+# Python 3.13 compatible with version ranges
 
 # =========== CORE LANGCHAIN ===========
 langchain>=0.1.0,<0.3.0
@@ -15,14 +14,10 @@ sentence-transformers>=2.2.2,<4.0.0
 
 # =========== DOCUMENT PROCESSING ===========
 pypdf>=3.17.4,<5.0.0
-# For .docx files (addresses warning #1)
-python-docx>=1.1.0,<2.0.0
-# For .pptx files (addresses warning #2)
-python-pptx>=0.6.23,<1.0.0
-
 # IMPORTANT: unstructured 0.12.2+ requires Python <3.13
 # Using 0.11.x which is compatible with Python 3.13
 unstructured>=0.11.0,<0.12.0
+# unstructured-inference>=0.7.0,<0.8.0  # May have compatibility issues, commented out
 pdf2image>=1.16.3,<2.0.0
 pytesseract>=0.3.10,<0.4.0
 
@@ -39,12 +34,9 @@ aiohttp>=3.9.0,<4.0.0
 playwright>=1.40.0,<2.0.0
 
 # =========== EMBEDDINGS ===========
-# tiktoken requires Rust compiler on Windows - use alternative:
-# For token counting without Rust dependency:
-transformers>=4.36.0,<5.0.0
+# tiktoken>=0.5.2,<0.7.0  # Temporarily disabled - requires Rust compiler on Windows
 huggingface-hub>=0.20.0,<0.25.0
-# If you need tiktoken and have Rust toolchain:
-# tiktoken>=0.5.2,<0.7.0
+transformers>=4.36.0,<5.0.0
 
 # =========== SEARCH & RERANKING ===========
 rank-bm25>=0.2.2,<0.3.0
@@ -81,13 +73,3 @@ isort>=5.12.0,<6.0.0
 # qdrant-client>=1.6.0,<2.0.0    # Another vector DB option
 # redis>=5.0.1,<6.0.0            # For caching and Redis as vector DB
 # lancedb>=0.2.0,<0.3.0          # Embedded vector DB
-
-# =========== INSTALLATION NOTES ===========
-# 1. Install requirements: pip install -r requirements.txt
-# 2. Download spaCy model: python -m spacy download en_core_web_sm
-# 3. Install Playwright browsers: playwright install
-# 4. For PDF OCR support, install Tesseract OCR:
-#    - Windows: https://github.com/UB-Mannheim/tesseract/wiki
-#    - Mac: brew install tesseract
-#    - Linux: apt-get install tesseract-ocr
-# 5. For tiktoken on Windows without Rust: Use transformers tokenizer instead
