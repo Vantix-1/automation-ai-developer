@@ -1,0 +1,10 @@
+{
+  "summary": "The report by McKinsey for 2025 highlights the transformative potential of AI in the workplace, comparing it to historical innovations like the steam engine. While companies are investing in AI, only 1% consider themselves mature in AI deployment, with the main barrier being leadership readiness. The report emphasizes the need for bold decision-making by leaders to harness AI's potential for amplifying human agency and driving productivity.\n",
+  "original_length": 10000,
+  "original_tokens": 1998,
+  "summary_length": 445,
+  "summary_tokens": 80,
+  "compression_ratio": 96.0,
+  "chunks_processed": 1,
+  "style": "concise"
+}
