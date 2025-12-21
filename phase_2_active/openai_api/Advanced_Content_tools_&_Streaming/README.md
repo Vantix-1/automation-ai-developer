@@ -1,4 +1,4 @@
-# Week 1: Days 6-8 - Advanced Content Tools & Streaming
+# Advanced Content Tools & Streaming
 
 ---
 

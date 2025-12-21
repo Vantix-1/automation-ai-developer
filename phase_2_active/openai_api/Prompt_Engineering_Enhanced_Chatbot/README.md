@@ -1,4 +1,4 @@
-# Week 1: Days 3-5 - Prompt Engineering & Enhanced Chatbot
+# Prompt Engineering & Enhanced Chatbot
 
 ## 🎯 Learning Objectives
 

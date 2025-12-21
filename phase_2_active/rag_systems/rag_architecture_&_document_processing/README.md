@@ -1,4 +1,4 @@
-# 📚 Days 25-27: RAG Architecture & Document Processing
+# 📚 RAG Architecture & Document Processing
 
 **Objective:** Master document processing pipelines and vector database setup for RAG systems
 

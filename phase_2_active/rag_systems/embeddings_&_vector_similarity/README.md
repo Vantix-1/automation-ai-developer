@@ -1,4 +1,4 @@
-# 📊 Days 22-24: Embeddings & Vector Similarity
+# 📊 Embeddings & Vector Similarity
 
 **Objective:** Master embedding concepts, vector mathematics, and semantic search implementation
 
