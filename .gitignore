@@ -89,3 +89,9 @@ phase_2_active/production_apis/chatapi/.env
 phase_2_active/production_apis/fastapi/.env
 phase_2_active/production_apis/monitoring/.env
 phase_2_active/production_apis/ragapi/.env
+phase_2_active/rag_systems/rag_qa_systems/data/chroma_db_basic/chroma.sqlite3
+phase_2_active/rag_systems/rag_qa_systems/data/chroma_db_basic/e9e45cc4-6e8b-4163-b910-3a5efb50e6f3/data_level0.bin
+phase_2_active/rag_systems/rag_qa_systems/data/chroma_db_basic/e9e45cc4-6e8b-4163-b910-3a5efb50e6f3/header.bin
+phase_2_active/rag_systems/rag_qa_systems/data/chroma_db_basic/e9e45cc4-6e8b-4163-b910-3a5efb50e6f3/length.bin
+phase_2_active/rag_systems/rag_qa_systems/data/chroma_db_basic/e9e45cc4-6e8b-4163-b910-3a5efb50e6f3/link_lists.bin
+phase_2_active/rag_systems/rag_qa_systems/data/sample_ai.txt
