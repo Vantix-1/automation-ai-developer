@@ -85,3 +85,7 @@ phase_2_active/rag_systems/week3_day22-24/simple_index/index.pkl
 phase_2_active/rag_systems/week3_day22-24/simple_index/index.pkl
 phase_2_active/openai_api/Advanced_Content_Tools_&_Streaming/.env
 phase_2_active/rag_systems/rag_qa_systems/.env
+phase_2_active/production_apis/chatapi/.env
+phase_2_active/production_apis/fastapi/.env
+phase_2_active/production_apis/monitoring/.env
+phase_2_active/production_apis/ragapi/.env
