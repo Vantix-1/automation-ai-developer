@@ -333,23 +333,10 @@ automation-ai-developer/
 │   └── api_fundamentals/
 │
 ├── 📁 phase_2_complete/ ✅ AI APIs & Docker Mastery
-│   ├── week_1_2_openai/
-│   │   ├── ai_chat_bot.py
-│   │   ├── ai_content_summarizer.py
-│   │   └── weather_assistant.py
-│   ├── week_3_4_langchain/
-│   │   ├── research_agent.py
-│   │   ├── conversational_bot.py
-│   │   └── multi_step_assistant.py
-│   ├── week_5_6_rag_systems/
-│   │   ├── rag_document_qa.py
-│   │   ├── multi_doc_assistant.py
-│   │   └── vector_search_demo.py
-│   └── week_7_8_docker_apis/
-│       ├── Dockerfile (multi-stage, optimized)
-│       ├── docker-compose.yml (full stack)
-│       ├── ai_chat_api.py
-│       └── rag_api.py
+│   ├── openai/
+│   ├── langchain/
+│   ├── rag_systems/
+│   └── production_apis/
 │
 ├── 📁 phase_3_active/ 🔄 Advanced Deployment
 │   ├── week_1_2_cloud_foundations/

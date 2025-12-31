@@ -1,0 +1,18 @@
+
+    Artificial Intelligence (AI) is the simulation of human intelligence in machines 
+    that are programmed to think like humans and mimic their actions. The term may also 
+    be applied to any machine that exhibits traits associated with a human mind such 
+    as learning and problem-solving.
+    
+    Machine Learning (ML) is a subset of AI that focuses on building systems that learn 
+    or improve performance based on the data they consume. Deep Learning is a subset of 
+    ML that uses neural networks with many layers.
+    
+    Large Language Models (LLMs) like GPT-4 are advanced AI models trained on vast amounts 
+    of text data. They can understand, generate, and translate human language with 
+    remarkable accuracy.
+    
+    Vector databases store data as high-dimensional vectors (embeddings) which capture 
+    semantic meaning. They enable efficient similarity search for applications like 
+    recommendation systems and question answering.
+    
