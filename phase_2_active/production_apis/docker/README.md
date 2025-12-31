@@ -1,421 +1,297 @@
-# 🐳 Docker Containerization
-
-## 📋 Overview
-This section covers containerizing AI applications with Docker for production deployment. You'll learn Docker fundamentals, multi-container orchestration, and production optimization techniques.
+# Docker Setup Instructions
 
 ## 📁 File Structure
+
+Create this directory structure in your project:
+
 ```
-day_43_45_docker/
-├── Dockerfile              # Production Docker configuration
-├── docker-compose.yml      # Multi-service orchestration
-├── container_config.py     # Docker management utilities
-└── docker_commands.md      # Comprehensive Docker cheat sheet
+your-project/
+├── .dockerignore
+├── .env.production
+├── docker-compose.yml
+├── Dockerfile (your existing file)
+├── Makefile
+├── requirements.txt (your existing file)
+├── nginx/
+│   ├── Dockerfile
+│   └── nginx.conf
+├── monitoring/
+│   ├── prometheus.yml
+│   ├── alerts.yml
+│   ├── loki-config.yml
+│   └── grafana/
+│       └── provisioning/
+│           └── datasources/
+│               └── datasource.yml
+├── certbot/
+│   ├── conf/
+│   └── www/
+├── init-scripts/
+└── backups/
 ```
 
-## 🛠️ Setup & Installation
+## 🚀 Quick Setup Steps
 
-### Prerequisites
-- Docker Engine 20.10+
-- Docker Compose 2.0+
-- Git (for version control)
+### Step 1: Create Directories
 
-### Installation Verification
 ```bash
-# Check Docker installation
-docker --version
-docker-compose --version  # or docker compose version
-
-# Verify Docker daemon is running
-docker info
-
-# Run test container
-docker run hello-world
+# Create all required directories
+mkdir -p nginx
+mkdir -p monitoring/grafana/provisioning/datasources
+mkdir -p monitoring/grafana/dashboards
+mkdir -p certbot/conf
+mkdir -p certbot/www
+mkdir -p init-scripts
+mkdir -p backups
 ```
 
-## 📚 Learning Objectives
+### Step 2: Copy All Files
 
-### Day 43: Docker Fundamentals
-- ✅ Understand Docker architecture and components
-- ✅ Create Dockerfile for Python applications
-- ✅ Build and run Docker containers
-- ✅ Manage container lifecycle
+Copy each file from the artifacts into the correct location:
 
-### Day 44: Multi-container Applications
-- ✅ Use Docker Compose for orchestration
-- ✅ Set up multi-service applications
-- ✅ Configure networking between containers
-- ✅ Manage volumes for data persistence
+1. **Root directory files:**
+   - `.dockerignore`
+   - `.env.production`
+   - `docker-compose.yml`
+   - `Makefile`
 
-### Day 45: Production Optimization
-- ✅ Implement multi-stage builds
-- ✅ Optimize Docker images for size and security
-- ✅ Add health checks and monitoring
-- ✅ Create production deployment configurations
+2. **nginx/ directory:**
+   - `nginx/Dockerfile`
+   - `nginx/nginx.conf`
 
-## 🚦 Quick Start
+3. **monitoring/ directory:**
+   - `monitoring/prometheus.yml`
+   - `monitoring/alerts.yml`
+   - `monitoring/loki-config.yml`
+   - `monitoring/grafana/provisioning/datasources/datasource.yml`
 
-### 1. Build Docker Image
+### Step 3: Generate Passwords
+
+On Linux/Mac, generate secure passwords:
+
 ```bash
-# Build the production image
-docker build -t ai-api:latest .
+# SECRET_KEY (32 bytes)
+openssl rand -base64 32
 
-# Build with specific Dockerfile
-docker build -t ai-api:prod -f Dockerfile.prod .
+# DB_PASSWORD (24 bytes)
+openssl rand -base64 24
 
-# View built images
-docker images
+# REDIS_PASSWORD (24 bytes)
+openssl rand -base64 24
+
+# GRAFANA_PASSWORD (16 bytes)
+openssl rand -base64 16
 ```
 
-### 2. Run Container
-```bash
-# Run a single container
-docker run -d --name ai-api -p 8000:8000 ai-api:latest
+On Windows (PowerShell):
 
-# Run with environment variables
-docker run -d --name ai-api \
-  -p 8000:8000 \
-  -e OPENAI_API_KEY=your_key \
-  -e ENVIRONMENT=production \
-  ai-api:latest
-
-# View running containers
-docker ps
+```powershell
+# Generate random passwords
+-join ((48..57) + (65..90) + (97..122) | Get-Random -Count 32 | % {[char]$_})
 ```
 
-### 3. Use Docker Compose
+### Step 4: Update .env.production
+
+Edit `.env.production` and replace these values:
+
 ```bash
-# Start all services
+# Replace these:
+OPENAI_API_KEY=sk-your-actual-openai-api-key-here
+SECRET_KEY=paste-generated-secret-key-here
+DB_PASSWORD=paste-generated-db-password-here
+REDIS_PASSWORD=paste-generated-redis-password-here
+GRAFANA_PASSWORD=paste-generated-grafana-password-here
+
+# Update these:
+DOMAIN=yourdomain.com
+SSL_EMAIL=admin@yourdomain.com
+CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+```
+
+### Step 5: Verify File Structure
+
+Run this command to verify all files are in place:
+
+```bash
+ls -R
+```
+
+You should see:
+- All directories created
+- All configuration files in place
+- .env.production with your passwords
+
+### Step 6: Deploy
+
+```bash
+# Load environment variables
+export $(cat .env.production | grep -v '^#' | xargs)
+
+# Build and start services
+docker-compose build
 docker-compose up -d
+
+# Check status
+docker-compose ps
 
 # View logs
 docker-compose logs -f
-
-# Scale specific service
-docker-compose up -d --scale ai-api=3
-
-# Stop services
-docker-compose down
-
-# Stop and remove volumes
-docker-compose down -v
 ```
 
-### 4. Use Management Utilities
+Or use the Makefile:
+
 ```bash
-# Run container configuration manager
-python container_config.py
-
-# Check Docker health
-python container_config.py --check
-
-# Clean up Docker resources
-python container_config.py --cleanup
+make build
+make up
+make status
+make logs
 ```
 
-## 🔧 Key Features
+## 🔍 Verify Deployment
 
-### 1. Production Dockerfile
-- Multi-stage builds for minimal image size
-- Non-root user for security
-- Health checks for container monitoring
-- Optimized layer caching
-- Environment variable configuration
+### Check Services are Running
 
-### 2. Docker Compose Setup
-- Multi-service orchestration (API, DB, Redis, Nginx)
-- Service dependencies and startup order
-- Volume management for data persistence
-- Network configuration for service communication
-- Resource limits and constraints
-
-### 3. Management Utilities
-- Docker environment validation
-- Image building and tagging
-- Container lifecycle management
-- Resource cleanup and optimization
-- Configuration generation
-
-### 4. Production Optimizations
-- Security scanning and vulnerability management
-- Performance optimization
-- Logging and monitoring integration
-- Backup and recovery procedures
-- Scaling configurations
-
-## 📖 Code Examples
-
-### Basic Dockerfile
-```dockerfile
-# Multi-stage build for Python application
-FROM python:3.11-slim as builder
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-FROM python:3.11-slim as runtime
-WORKDIR /app
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY . .
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Docker Compose Service
-```yaml
-services:
-  ai-api:
-    build: .
-    ports:
-      - "8000:8000"
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - DATABASE_URL=postgresql://postgres:password@db:5432/ai_api
-    volumes:
-      - ./uploads:/app/uploads
-    depends_on:
-      db:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-```
-
-### Python Docker Management
-```python
-from container_config import DockerManager
-
-manager = DockerManager()
-
-# Build image
-manager.build_image(tag="ai-api:v1.0")
-
-# Run container
-manager.run_container(
-    image="ai-api:v1.0",
-    name="ai-api-production",
-    ports={"8000": "8000"},
-    env_vars={"ENVIRONMENT": "production"}
-)
-
-# List containers
-manager.list_containers(all_containers=True)
-```
-
-## 🧪 Testing & Validation
-
-### 1. Test Docker Build
 ```bash
-# Build and test locally
-docker build -t test-image .
-docker run --rm test-image python --version
-
-# Scan for vulnerabilities
-docker scan test-image
-
-# Check image size
-docker images test-image
+docker-compose ps
 ```
 
-### 2. Test Docker Compose
+All services should show "Up" and "healthy" status.
+
+### Test API
+
 ```bash
-# Test configuration
-docker-compose config
-
-# Build without cache
-docker-compose build --no-cache
-
-# Run tests in container
-docker-compose run ai-api pytest
+curl http://localhost:8000/health
 ```
 
-### 3. Validate Production Readiness
+Should return: `{"status":"healthy"}`
+
+### Access Monitoring
+
+- **Grafana**: http://localhost:3000
+  - Username: `admin`
+  - Password: (from .env.production)
+
+- **Prometheus**: http://localhost:9090
+
+## 🔒 SSL Setup (After Initial Deployment)
+
+If you have a domain pointing to your server:
+
 ```bash
-# Check security best practices
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-  goodwithtech/dockerfile-checker Dockerfile
+# Get SSL certificate from Let's Encrypt
+docker-compose run --rm certbot certonly \
+  --webroot \
+  --webroot-path=/var/www/certbot \
+  --email your-email@domain.com \
+  --agree-tos \
+  --no-eff-email \
+  -d yourdomain.com \
+  -d www.yourdomain.com
 
-# Lint Dockerfile
-docker run --rm -i hadolint/hadolint < Dockerfile
+# Reload Nginx
+docker-compose exec nginx nginx -s reload
 ```
 
-## 🔍 Configuration Reference
+## 📊 Common Commands
 
-### Dockerfile Directives
-| Directive | Purpose | Example |
-|-----------|---------|---------|
-| FROM | Base image | `FROM python:3.11-slim` |
-| WORKDIR | Working directory | `WORKDIR /app` |
-| COPY | Copy files | `COPY . .` |
-| RUN | Execute commands | `RUN pip install -r requirements.txt` |
-| ENV | Environment variables | `ENV PYTHONUNBUFFERED=1` |
-| EXPOSE | Port exposure | `EXPOSE 8000` |
-| CMD | Default command | `CMD ["python", "app.py"]` |
-| HEALTHCHECK | Health check | `HEALTHCHECK --interval=30s CMD curl -f http://localhost:8000/health` |
-
-### Docker Compose Configuration
-| Service | Purpose | Configuration |
-|---------|---------|---------------|
-| ai-api | Main API service | Build from Dockerfile, port 8000 |
-| db | PostgreSQL database | PostgreSQL 15 with volume |
-| redis | Redis cache | Redis 7 with authentication |
-| nginx | Reverse proxy | Nginx with SSL termination |
-| prometheus | Metrics | Prometheus for monitoring |
-| grafana | Visualization | Grafana dashboards |
-
-### Environment Variables
-| Variable | Purpose | Example |
-|----------|---------|---------|
-| OPENAI_API_KEY | OpenAI API key | `sk-...` |
-| DATABASE_URL | Database connection | `postgresql://user:pass@host/db` |
-| REDIS_URL | Redis connection | `redis://:pass@host:6379/0` |
-| SECRET_KEY | JWT secret | `your-secret-key` |
-| ENVIRONMENT | Runtime environment | `production` |
-
-## 🎯 Best Practices Implemented
-
-### Security
-- **Non-root User:** Run containers as non-root user
-- **Minimal Base Images:** Use slim/alpine images
-- **Regular Updates:** Keep base images updated
-- **Secrets Management:** Use Docker secrets or environment files
-- **Network Segmentation:** Isolate services with networks
-
-### Performance
-- **Multi-stage Builds:** Reduce final image size
-- **Layer Caching:** Optimize build times
-- **Resource Limits:** Set CPU and memory limits
-- **Health Checks:** Ensure service availability
-- **Logging:** Structured JSON logging
-
-### Operations
-- **Version Tagging:** Semantic versioning for images
-- **Rollback Strategy:** Easy rollback with version tags
-- **Backup Procedures:** Regular volume backups
-- **Monitoring Integration:** Prometheus metrics
-- **Disaster Recovery:** Backup and restore procedures
-
-## 📈 Production Deployment
-
-### 1. Build Pipeline
-```yaml
-# GitHub Actions example
-name: Build and Push
-on: [push]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.REGISTRY }}/ai-api:${{ github.sha }} .
-      - name: Push to Registry
-        run: docker push ${{ secrets.REGISTRY }}/ai-api:${{ github.sha }}
-```
-
-### 2. Deployment Script
 ```bash
-#!/bin/bash
-# deploy.sh
-set -e
+# View all logs
+make logs
 
-# Pull latest image
-docker pull registry.example.com/ai-api:latest
+# View specific service logs
+docker-compose logs -f ai-api
 
-# Update services
-docker-compose pull
-docker-compose up -d --remove-orphans
+# Restart services
+make restart
 
-# Run migrations
-docker-compose exec ai-api python manage.py migrate
+# Check health
+make health
 
-# Cleanup old images
-docker image prune -f
+# Create backup
+make backup
+
+# Stop all services
+make down
+
+# Clean up (WARNING: removes all data)
+make clean
 ```
 
-### 3. Monitoring Setup
-```bash
-# Check container health
-docker inspect --format='{{json .State.Health}}' ai-api
+## 🆘 Troubleshooting
 
-# View resource usage
-docker stats ai-api
+### Service won't start
 
-# View logs
-docker logs -f ai-api
-
-# Execute commands
-docker exec -it ai-api python manage.py shell
-```
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-**Port conflicts**
-```bash
-# Check what's using port 8000
-sudo lsof -i :8000
-
-# Change port mapping
-docker run -p 8001:8000 ai-api:latest
-```
-
-**Permission issues**
-```bash
-# Fix volume permissions
-sudo chown -R 1000:1000 ./uploads
-
-# Or use named volumes
-docker volume create ai_uploads
-```
-
-**Build cache issues**
-```bash
-# Clear build cache
-docker builder prune
-
-# Build without cache
-docker build --no-cache -t ai-api:latest .
-```
-
-**Container won't start**
 ```bash
 # Check logs
-docker logs ai-api
+docker-compose logs service-name
 
-# Run with interactive shell
-docker run -it --rm ai-api:latest sh
+# Check if port is already in use
+netstat -tulpn | grep :8000
 ```
 
-### Debugging Commands
+### Database connection error
+
 ```bash
-# Inspect container
-docker inspect ai-api
+# Verify database is running
+docker-compose ps db
 
-# Check processes in container
-docker top ai-api
+# Check database logs
+docker-compose logs db
 
-# Copy files from container
-docker cp ai-api:/app/logs/app.log ./app.log
-
-# View resource usage
-docker stats ai-api db redis
+# Test connection
+docker-compose exec db psql -U postgres -d ai_api
 ```
 
-## 📚 Resources
-- [Docker Documentation](https://docs.docker.com/)
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
-- [Dockerfile Best Practices](https://docs.docker.com/develop/dev-best-practices/)
-- [Docker Security](https://docs.docker.com/engine/security/)
-- [OCI Image Specification](https://github.com/opencontainers/image-spec)
+### Redis connection error
 
-## 🏆 Completion Checklist
-- [ ] Created production Dockerfile
-- [ ] Implemented multi-stage builds
-- [ ] Set up Docker Compose orchestration
-- [ ] Added health checks and monitoring
-- [ ] Implemented security best practices
-- [ ] Created management utilities
-- [ ] Optimized for production deployment
-- [ ] Added backup and recovery procedures
+```bash
+# Check Redis is running
+docker-compose ps redis
+
+# Test Redis
+docker-compose exec redis redis-cli -a your-redis-password ping
+```
+
+### Out of disk space
+
+```bash
+# Check disk usage
+df -h
+
+# Clean Docker resources
+docker system prune -a
+
+# Remove old backups
+find backups/ -name "*.tar.gz" -mtime +7 -delete
+```
+
+## 📝 Next Steps
+
+1. ✅ Configure your domain's DNS to point to your server
+2. ✅ Set up SSL certificates with Let's Encrypt
+3. ✅ Configure firewall to allow only ports 80, 443, and 22
+4. ✅ Set up automated backups
+5. ✅ Configure Grafana dashboards
+6. ✅ Set up monitoring alerts
+7. ✅ Test disaster recovery procedures
+
+## 🔐 Security Checklist
+
+- [ ] All passwords are strong and unique
+- [ ] Database port (5432) is NOT exposed to host
+- [ ] Redis port (6379) is NOT exposed to host
+- [ ] SSL/TLS is configured and working
+- [ ] Firewall only allows necessary ports
+- [ ] Grafana password has been changed
+- [ ] CORS_ORIGINS is set to your actual domains
+- [ ] Backups are running and tested
+
+## 📞 Support
+
+If you encounter issues:
+
+1. Check logs: `docker-compose logs -f`
+2. Verify environment variables: `docker-compose config`
+3. Check service health: `make health`
+4. Review the troubleshooting section above
+
